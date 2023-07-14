@@ -9,12 +9,30 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/server": "^11.11.0",
+    "@ethersproject/providers": "5.7.0",
+    "@imtbl/sdk": "0.1.10-alpha.4",
+    "@imtbl/sdk-local": "link:../ts-immutable-sdk/sdk",
+    "@mantine/core": "^6.0.14",
+    "@mantine/hooks": "^6.0.14",
+    "@mantine/next": "^6.0.14",
+    "@mantine/notifications": "^6.0.15",
+    "@mantine/spotlight": "^6.0.15",
+    "@opensea/seaport-js": "1.3.0",
+    "@tabler/icons-react": "^2.23.0",
     "@types/node": "20.3.1",
     "@types/react": "18.2.13",
     "@types/react-dom": "18.2.6",
+    "axios": "^1.4.0",
+    "cookies-next": "^2.1.2",
+    "ethers": "5.7.0",
     "next": "13.4.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "typescript": "5.1.3"
+  },
+  "browser": {
+    "fs": false
   }
 }
