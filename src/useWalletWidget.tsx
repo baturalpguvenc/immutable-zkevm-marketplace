@@ -4,7 +4,7 @@ import {
   OrchestrationEventType,
   WalletEventType,
   WalletNetworkSwitchEvent,
-} from "@imtbl/sdk-local";
+} from "@imtbl/sdk";
 import { useContext, useEffect, useState } from "react";
 import {
   handleOrchestrationEvent,

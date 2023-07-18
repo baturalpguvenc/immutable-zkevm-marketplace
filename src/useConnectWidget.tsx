@@ -4,7 +4,7 @@ import {
   ConnectionSuccess,
   IMTBLWidgetEvents,
   OrchestrationEventType,
-} from "@imtbl/sdk-local";
+} from "@imtbl/sdk";
 import { useContext, useEffect } from "react";
 import { handleOrchestrationEvent } from "./orchestration";
 import { hideAllWidgets, WidgetContext } from "./orchestration";

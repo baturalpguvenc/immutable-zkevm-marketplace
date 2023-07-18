@@ -8,7 +8,7 @@ import {
   WalletProviderName,
   WalletReact,
   WidgetTheme,
-} from "@imtbl/sdk-local";
+} from "@imtbl/sdk";
 import { Group } from "@mantine/core";
 import { ShowWidget } from "../../src/orchestration";
 import React, { useEffect } from "react";

@@ -27,6 +27,7 @@ import { useConnectWidget } from "../../src/useConnectWidget";
 import { hideAllWidgets, WidgetContext } from "../../src/orchestration";
 import { ImmutableWidget } from "../ImmutableWidget/ImmutableWidget";
 import { Web3Context } from "../../src/Web3ProviderContext";
+import { useWalletWidget } from "@/useWalletWidget";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -105,6 +106,7 @@ export function HeaderSearch({ links }: HeaderSearchProps) {
   } = useContext(WidgetContext);
   // hooks for each widget set up event listeners and orchestration logic
   useConnectWidget(setWeb3Provider);
+  useWalletWidget(setWeb3Provider);
 
   // button click functions to open/close widgets
   const openConnectWidget = useCallback(() => {

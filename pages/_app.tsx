@@ -65,8 +65,8 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
                       links={[
                         { label: "Home", link: "/" },
                         {
-                          label: "Stats",
-                          link: "/stats",
+                          label: "Assets",
+                          link: "/assets",
                         },
                       ]}
                     />

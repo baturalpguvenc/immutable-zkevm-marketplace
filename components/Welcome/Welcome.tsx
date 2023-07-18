@@ -24,12 +24,10 @@ export function Welcome() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("WTFAS");
         const response = await client.listCollections({
           chainName: CHAIN_NAME,
         });
-        console.log("result");
-        console.log(response);
+        console.log("result", response);
         setCollections(response.result);
       } catch (error) {
         console.error("Error fetching collections:", error);

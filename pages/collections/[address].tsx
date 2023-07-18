@@ -1,22 +1,14 @@
-import {
-  Alert,
-  Center,
-  Container,
-  Flex,
-  Grid,
-  SimpleGrid,
-  Skeleton,
-  Text,
-} from "@mantine/core";
+import { Alert, Center, Container, Grid, Skeleton, Text } from "@mantine/core";
 import React, { useContext, useEffect, useState } from "react";
 import { CollectionCard } from "../../components/CollectionCard/CollectionCard";
 import { useRouter } from "next/router";
 import { CHAIN_NAME, client } from "../../api/immutable";
 import { NFTCard } from "../../components/NFTCard/NFTCard";
 import { Web3Context } from "../../src/Web3ProviderContext";
-import { Environment } from "@imtbl/sdk";
-import { JsonRpcProvider } from "@ethersproject/providers";
-import { IconAlertCircle } from "@tabler/icons-react";
+import { Environment, Orderbook } from "@imtbl/sdk";
+import { IconAlertCircle, IconCheck } from "@tabler/icons-react";
+import { providers } from "ethers";
+import { notifications } from "@mantine/notifications";
 
 export default function NFTPage() {
   const router = useRouter();
@@ -26,24 +18,20 @@ export default function NFTPage() {
   // Collection Data
   const [collection, setCollection] = useState(undefined);
   // All the listings within the collection
-  const [listings, setListings] = useState([]);
+  const [listings, setListings] = useState(undefined);
 
   const { web3Provider, setWeb3Provider } = useContext(Web3Context);
 
-  // const provider = new JsonRpcProvider("https://zkevm-rpc.dev.x.immutable.com");
-  let oConfig = {
+  const orderbookClient = new Orderbook({
     baseConfig: {
       environment: Environment.SANDBOX,
     },
-    // provider: provider,
-    // seaportContractAddress: "0xD66d6E2dbF68a3c9A50638782B352b3cd60D3f86",
-    // zoneContractAddress: "0xa1A3A3c7605ef51cCbC70A2df7E87cCEE2A77e9e",
-    // overrides: {
-    //   apiEndpoint: "https://order-book-mr.sandbox.imtbl.com",
-    //   chainName: CHAIN_NAME,
-    // },
-  };
-  // const orderbookClient = new Orderbook(oConfig);
+    overrides: {
+      provider: new providers.JsonRpcProvider(
+        "https://zkevm-rpc.sandbox.x.immutable.com"
+      ),
+    },
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,9 +53,10 @@ export default function NFTPage() {
         // Listings
         const lres = await orderbookClient.listListings({
           chainName: CHAIN_NAME,
-          contractAddress: String(address),
           status: "ACTIVE",
+          contractAddress: String(address),
         });
+        console.log(lres);
         setListings(lres.result as any);
       } catch (error) {
         console.error("Error fetching collections:", error);
@@ -77,7 +66,7 @@ export default function NFTPage() {
     fetchData();
   }, []);
 
-  if (collection === undefined) {
+  if (listings === undefined || collection === undefined) {
     return (
       <Container>
         <Skeleton />
@@ -99,25 +88,44 @@ export default function NFTPage() {
         const signer = web3Provider!.getSigner();
         const address = await signer.getAddress();
 
-        console.log("signer", signer);
-        console.log("address", address);
-        console.log("orderId", (x as any).id);
+        console.log("Buying", x, address, signer);
+        console.log("Signer", signer);
 
-        const { unsignedFulfillmentTransaction, unsignedApprovalTransaction } =
-          await orderbookClient.fulfillOrder((x as any).id, address);
+        const fulfillResponse = await orderbookClient.fulfillOrder(
+          (x as any).id,
+          address
+        );
+        const { unsignedFulfillmentTransaction } = fulfillResponse;
+        console.log("fulfill response", fulfillResponse);
 
-        // if (unsignedApprovalTransaction && unsignedFulfillmentTransaction) {
-        //   const signedTx = await signer.signTransaction(
-        //     unsignedApprovalTransaction
-        //   );
-        //   const receipt1 = await web3Provider.sendTransaction(signedTx);
-        //   await receipt1.wait();
-        //   const signedFulfillTx = await signer.signTransaction(
-        //     unsignedApprovalTransaction
-        //   );
-        //   const receipt2 = await web3Provider.sendTransaction(signedFulfillTx);
-        //   await receipt2.wait();
-        // }
+        if (unsignedFulfillmentTransaction) {
+          // signer.sendTransaction()
+          // const signedFulfillTx = await signer.signTransaction(
+          //   unsignedFulfillmentTransaction
+          // );
+          unsignedFulfillmentTransaction.value =
+            unsignedFulfillmentTransaction.value.toHexString();
+
+          unsignedFulfillmentTransaction.gasLimit =
+            unsignedFulfillmentTransaction.gasLimit.toHexString();
+
+          console.log("fulfilled", unsignedFulfillmentTransaction);
+
+          const transactionHash = await web3Provider.send(
+            "eth_sendTransaction",
+            [unsignedFulfillmentTransaction]
+          );
+
+          // const receipt = await web3Provider.sendTransaction(transactionHash);
+          // const result = await receipt.wait();
+          console.log("fulfillment signed, result:", transactionHash);
+          notifications.show({
+            title: "NFT Purchased!",
+            color: "green",
+            icon: <IconCheck />,
+            message: `NFT Purchased, you are awesome! transactionHash: ${transactionHash} 🤥`,
+          });
+        }
       } catch (error) {
         // Handle any errors that occur during the process
         console.error("An error occurred:", error);
@@ -125,14 +133,12 @@ export default function NFTPage() {
     };
     return nft === undefined
       ? undefined
-      : Object.assign({}, x, nft, { onBuy }, { order_id: x.id });
+      : Object.assign({}, x, nft, { onClick: onBuy }, { order_id: x.id });
   });
 
   const listingsWithDetails = listingsFull.filter(
     (listing) => listing !== undefined
   );
-  console.log("FTS", NFTs);
-  console.log(listingsWithDetails);
 
   const { name, description, image, updated_at } = collection;
 
@@ -152,11 +158,11 @@ export default function NFTPage() {
         </Grid.Col>
         <Grid.Col xs={8}>
           {listings.length > 0 ? (
-            <SimpleGrid cols={4}>
+            <Container>
               {listingsWithDetails.map((x: any, index) => (
                 <NFTCard key={`nft-${index}`} {...x} />
               ))}
-            </SimpleGrid>
+            </Container>
           ) : (
             <Center>
               <Alert

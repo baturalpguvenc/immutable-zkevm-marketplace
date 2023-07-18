@@ -53,10 +53,10 @@ const useStyles = createStyles((theme) => ({
 
 interface CollectionCardProps {
   image: string;
-  link: string;
+  link?: string;
   title: string;
   description: string;
-  rating: string;
+  rating?: string;
   author: {
     name: string;
     image: string;
