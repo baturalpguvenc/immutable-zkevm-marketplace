@@ -1,5 +1,12 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { Web3Provider } from "@ethersproject/providers";
+import { providers } from "ethers";
+
+declare global {
+  interface Window {
+    ethereum: providers.ExternalProvider | providers.JsonRpcFetchFunc; // Adjust this based on the type of providers.Web3Provider
+  }
+}
 
 interface Web3ContextProps {
   web3Provider: Web3Provider | undefined;
@@ -13,10 +20,18 @@ export const Web3Context = createContext<Web3ContextProps>({
   setWeb3Provider: () => {},
 });
 
-export function Web3ProviderContextProvider({ children }) {
+export function Web3ProviderContextProvider({ children }: any) {
   const [web3Provider, setWeb3Provider] = useState<Web3Provider | undefined>(
     undefined
   );
+
+  // Load web3Provider from an already connected window.etherum
+  useEffect(() => {
+    const provider = new providers.Web3Provider(window.ethereum);
+    if (provider) {
+      setWeb3Provider(provider);
+    }
+  }, []);
 
   return (
     <Web3Context.Provider value={{ web3Provider, setWeb3Provider }}>

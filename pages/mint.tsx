@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { CHAIN_NAME, client } from "../api/immutable";
 import { NFTCard } from "../components/NFTCard/NFTCard";
 
-export default function Assets() {
+export default function Mint() {
   const { web3Provider } = useContext(Web3Context);
 
   const [nfts, setNfts] = useState([]);

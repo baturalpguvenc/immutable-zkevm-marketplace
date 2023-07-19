@@ -14,16 +14,11 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconCheck,
-  IconGasStation,
-  IconGauge,
-  IconManualGearbox,
-  IconUsers,
-} from "@tabler/icons-react";
+import { IconCheck, IconExclamationCircle } from "@tabler/icons-react";
 import React, { useContext, useState } from "react";
 import { orderbookSDK } from "../../api/immutable";
 import { notifications } from "@mantine/notifications";
+import { AxiosError } from "axios";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -75,7 +70,7 @@ interface NFTCardProps {
   image: string;
   // Only pass in buy object if its a listing
   buy?: any;
-  onClick?: () => void;
+  onClick?: () => Promise<void>;
 }
 
 export function NFTCard({
@@ -91,65 +86,81 @@ export function NFTCard({
   const [listing] = buy || [];
   const [opened, { toggle, close }] = useDisclosure(false);
   const [amount, setAmount] = useState(10000000000);
+  const [loading, setLoading] = useState(false);
+  const [buying, setBuying] = useState(false);
   const theme = useMantineTheme();
   const { web3Provider, setWeb3Provider } = useContext(Web3Context);
 
-  const handleClick = () => {
+  const handleClick = async () => {
+    setBuying(true);
     if (onClick) {
-      onClick();
+      await onClick();
     }
+    setBuying(false);
   };
 
   const createListing = async () => {
     if (!web3Provider) return;
-    console.log("createlisting called!");
+    try {
+      setLoading(true);
+      const signer = web3Provider!.getSigner();
+      const offerer = await signer.getAddress();
+      const listing = await orderbookSDK.prepareListing({
+        makerAddress: offerer,
+        buy: {
+          amount: amount,
+          type: "NATIVE",
+        },
+        sell: {
+          contractAddress: contract_address,
+          tokenId: token_id,
+          type: "ERC721",
+        },
+      });
+      console.log("create and prepare listed!");
 
-    const signer = web3Provider!.getSigner();
-    const offerer = await signer.getAddress();
-    const listing = await orderbookSDK.prepareListing({
-      makerAddress: offerer,
-      buy: {
-        amount: amount,
-        type: "NATIVE",
-      },
-      sell: {
-        contractAddress: contract_address,
-        tokenId: token_id,
-        type: "ERC721",
-      },
-    });
-    console.log("preparelisted");
+      // If the user hasn't yet approved the Immutable Seaport contract to transfer assets from this
+      // collection on their behalf they'll need to do so before they create an order
+      if (listing.unsignedApprovalTransaction) {
+        const receipt = await signer.sendTransaction(
+          listing.unsignedApprovalTransaction
+        );
+        await receipt.wait();
+      }
+      console.log("approved", listing.unsignedApprovalTransaction);
 
-    // If the user hasn't yet approved the Immutable Seaport contract to transfer assets from this
-    // collection on their behalf they'll need to do so before they create an order
-    if (listing.unsignedApprovalTransaction) {
-      const receipt = await signer.sendTransaction(
-        listing.unsignedApprovalTransaction
+      const signature = await signer._signTypedData(
+        listing.typedOrderMessageForSigning.domain,
+        listing.typedOrderMessageForSigning.types,
+        listing.typedOrderMessageForSigning.value
       );
-      await receipt.wait();
-    }
-    console.log("approved", listing.unsignedApprovalTransaction);
+      console.log("signed", signature);
 
-    const signature = await signer._signTypedData(
-      listing.typedOrderMessageForSigning.domain,
-      listing.typedOrderMessageForSigning.types,
-      listing.typedOrderMessageForSigning.value
-    );
-    console.log("signed", signature);
-
-    const {
-      result: { id: orderId },
-    } = await orderbookSDK.createListing({
-      orderComponents: listing.orderComponents,
-      orderHash: listing.orderHash,
-      orderSignature: signature,
-    });
-    if (orderId) {
+      const {
+        result: { id: orderId },
+      } = await orderbookSDK.createListing({
+        orderComponents: listing.orderComponents,
+        orderHash: listing.orderHash,
+        orderSignature: signature,
+      });
+      if (orderId) {
+        setLoading(false);
+        toggle();
+        notifications.show({
+          title: "Order created",
+          color: "green",
+          icon: <IconCheck />,
+          message: `Your order is created, you are awesome! orderId: ${orderId} 🤥`,
+        });
+      }
+    } catch (error: any) {
+      setLoading(false);
+      console.log(error);
       notifications.show({
-        title: "Order created",
-        color: "green",
-        icon: <IconCheck />,
-        message: `Your order is created, you are awesome! orderId: ${orderId} 🤥`,
+        title: "Order failed to create",
+        color: "red",
+        icon: <IconExclamationCircle />,
+        message: `Your order has failed to create, ${error} 🤥`,
       });
     }
   };
@@ -190,7 +201,12 @@ export function NFTCard({
               ></Text>
             </Stack>
 
-            <Button radius="xl" style={{ flex: 1 }} onClick={handleClick}>
+            <Button
+              radius="xl"
+              style={{ flex: 1 }}
+              onClick={handleClick}
+              loading={buying}
+            >
               Buy now
             </Button>
           </Group>
@@ -202,7 +218,7 @@ export function NFTCard({
             <Modal
               opened={opened}
               onClose={close}
-              title="Authentication"
+              title="List NFT"
               overlayProps={{
                 color:
                   theme.colorScheme === "dark"
@@ -221,7 +237,7 @@ export function NFTCard({
                   setAmount(parseFloat(e.currentTarget.value || "0"));
                 }}
               />
-              <Button onClick={createListing} mt={12}>
+              <Button onClick={createListing} mt={12} loading={loading}>
                 Create
               </Button>
             </Modal>

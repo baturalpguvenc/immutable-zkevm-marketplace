@@ -89,15 +89,11 @@ export default function NFTPage() {
         const address = await signer.getAddress();
 
         console.log("Buying", x, address, signer);
-        console.log("Signer", signer);
-
         const fulfillResponse = await orderbookClient.fulfillOrder(
           (x as any).id,
           address
         );
         const { unsignedFulfillmentTransaction } = fulfillResponse;
-        console.log("fulfill response", fulfillResponse);
-
         if (unsignedFulfillmentTransaction) {
           // signer.sendTransaction()
           // const signedFulfillTx = await signer.signTransaction(
@@ -111,19 +107,22 @@ export default function NFTPage() {
 
           console.log("fulfilled", unsignedFulfillmentTransaction);
 
-          const transactionHash = await web3Provider.send(
-            "eth_sendTransaction",
-            [unsignedFulfillmentTransaction]
-          );
+          const receipt = await web3Provider.send("eth_sendTransaction", [
+            unsignedFulfillmentTransaction,
+          ]);
 
-          // const receipt = await web3Provider.sendTransaction(transactionHash);
+          // const receipt = await web3Provider.sendTransaction(
+          //   unsignedFulfillmentTransaction
+          // );
           // const result = await receipt.wait();
-          console.log("fulfillment signed, result:", transactionHash);
           notifications.show({
             title: "NFT Purchased!",
             color: "green",
             icon: <IconCheck />,
-            message: `NFT Purchased, you are awesome! transactionHash: ${transactionHash} 🤥`,
+            message: `NFT Purchased, you are awesome! transactionHash: ${receipt} 🤥`,
+            onClose: () => {
+              router.reload();
+            },
           });
         }
       } catch (error) {

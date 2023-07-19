@@ -68,6 +68,10 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
                           label: "Assets",
                           link: "/assets",
                         },
+                        {
+                          label: "Mint",
+                          link: "/mint",
+                        },
                       ]}
                     />
                   }
