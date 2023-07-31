@@ -237,7 +237,7 @@ export function NFTCard({
                 }}
               />
               <Button onClick={createListing} mt={12} loading={loading}>
-                Create
+                List NFT
               </Button>
             </Modal>
           </>

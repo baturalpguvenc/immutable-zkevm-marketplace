@@ -6,7 +6,6 @@ import {
   Stack,
   Table,
   Text,
-  useMantineTheme,
 } from "@mantine/core";
 import { useRouter } from "next/router";
 import React from "react";

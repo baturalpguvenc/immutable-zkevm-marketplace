@@ -27,7 +27,6 @@ export function Welcome() {
         const response = await client.listCollections({
           chainName: CHAIN_NAME,
         });
-        console.log("result", response);
         setCollections(response.result);
       } catch (error) {
         console.error("Error fetching collections:", error);

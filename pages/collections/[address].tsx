@@ -1,4 +1,12 @@
-import { Alert, Center, Container, Grid, Skeleton, Text } from "@mantine/core";
+import {
+  Alert,
+  Center,
+  Container,
+  Grid,
+  Group,
+  Skeleton,
+  Text,
+} from "@mantine/core";
 import React, { useContext, useEffect, useState } from "react";
 import { CollectionCard } from "../../components/CollectionCard/CollectionCard";
 import { useRouter } from "next/router";
@@ -20,7 +28,7 @@ export default function NFTPage() {
   // All the listings within the collection
   const [listings, setListings] = useState(undefined);
 
-  const { web3Provider, setWeb3Provider } = useContext(Web3Context);
+  const { web3Provider } = useContext(Web3Context);
 
   const orderbookClient = new Orderbook({
     baseConfig: {
@@ -93,7 +101,8 @@ export default function NFTPage() {
           (x as any).id,
           address
         );
-        console.log('xxxx')
+        // If exchanging in ERC20 tokens, you will need to send transaction for unsignedApprovalTransaction
+        // ie. const receipt = await signer.sendTransaction(unsignedApprovalTransaction);
         const { unsignedFulfillmentTransaction } = fulfillResponse;
         if (unsignedFulfillmentTransaction) {
           console.log("fulfilled", unsignedFulfillmentTransaction);
@@ -102,14 +111,6 @@ export default function NFTPage() {
             unsignedFulfillmentTransaction
           );
 
-          // const receipt = await web3Provider.send("eth_sendTransaction", [
-          //   unsignedFulfillmentTransaction,
-          // ]);
-
-          // const receipt = await web3Provider.sendTransaction(
-          //   unsignedFulfillmentTransaction
-          // );
-          // const result = await receipt.wait();
           notifications.show({
             title: "NFT Purchased!",
             color: "green",
@@ -152,11 +153,11 @@ export default function NFTPage() {
         </Grid.Col>
         <Grid.Col xs={8}>
           {listings.length > 0 ? (
-            <Container>
+            <Group>
               {listingsWithDetails.map((x: any, index) => (
                 <NFTCard key={`nft-${index}`} {...x} />
               ))}
-            </Container>
+            </Group>
           ) : (
             <Center>
               <Alert

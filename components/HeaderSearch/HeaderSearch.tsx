@@ -8,7 +8,6 @@ import {
   rem,
   Text,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import { IconWallet } from "@tabler/icons-react";
 import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
 import Link from "next/link";
@@ -82,22 +81,21 @@ interface HeaderSearchProps {
 }
 
 export function HeaderSearch({ links }: HeaderSearchProps) {
-  const [opened, { toggle }] = useDisclosure(false);
   const { classes, cx } = useStyles();
   const [active, setActive] = useState(links[0].link);
 
-  // Widget stuff
-  // widget context state for showing/hiding widgets
+  // Widget context state for showing/hiding widgets
   const { web3Provider, setWeb3Provider } = useContext(Web3Context);
   const {
     showWidgets: { showConnect, showWallet, showSwap, showBridge },
     setShowWidgets,
   } = useContext(WidgetContext);
-  // hooks for each widget set up event listeners and orchestration logic
+
+  // Hooks for each widget to propagate web3 provider from event.
   useConnectWidget(setWeb3Provider);
   useWalletWidget(setWeb3Provider);
 
-  // button click functions to open/close widgets
+  // Controls the opening and closing of the widget window
   const openConnectWidget = useCallback(() => {
     setShowWidgets({
       ...hideAllWidgets,
