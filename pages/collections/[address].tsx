@@ -1,3 +1,7 @@
+import React, { useContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { providers } from "ethers";
+
 import {
   Alert,
   Center,
@@ -7,16 +11,15 @@ import {
   Skeleton,
   Text,
 } from "@mantine/core";
-import React, { useContext, useEffect, useState } from "react";
-import { CollectionCard } from "../../components/CollectionCard/CollectionCard";
-import { useRouter } from "next/router";
-import { CHAIN_NAME, client } from "../../api/immutable";
-import { NFTCard } from "../../components/NFTCard/NFTCard";
-import { Web3Context } from "../../src/Web3ProviderContext";
-import { Environment, Orderbook } from "@imtbl/sdk";
-import { IconAlertCircle, IconCheck } from "@tabler/icons-react";
-import { providers } from "ethers";
 import { notifications } from "@mantine/notifications";
+import { IconAlertCircle, IconCheck } from "@tabler/icons-react";
+
+import { Environment, Orderbook } from "@imtbl/sdk";
+
+import { CollectionCard } from "@/components/CollectionCard/CollectionCard";
+import { CHAIN_NAME, client } from "@/api/immutable";
+import { NFTCard } from "@/components/NFTCard/NFTCard";
+import { Web3Context } from "@/contexts/Web3ProviderContext";
 
 export default function NFTPage() {
   const router = useRouter();

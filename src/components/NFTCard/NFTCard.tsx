@@ -1,4 +1,4 @@
-import { Web3Context } from "@/Web3ProviderContext";
+import { Web3Context } from "@/contexts/Web3ProviderContext";
 import {
   Badge,
   Button,
@@ -16,7 +16,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconCheck, IconExclamationCircle } from "@tabler/icons-react";
 import React, { useContext, useState } from "react";
-import { orderbookSDK } from "../../api/immutable";
+import { orderbookSDK } from "@/api/immutable";
 import { notifications } from "@mantine/notifications";
 
 const useStyles = createStyles((theme) => ({
@@ -67,7 +67,7 @@ interface NFTCardProps {
   name: string;
   description: string;
   image: string;
-  // Only pass in buy object if its a listing
+  // If listing buy item is not null
   buy?: any;
   onClick?: () => Promise<void>;
 }
@@ -175,13 +175,11 @@ export function NFTCard({
         />
       </Card.Section>
       <Group position="apart" mt="md" mb="md" sx={{ minHeight: 125 }}>
-        <div>
-          <Text fw={500}>{name ?? "Unnamed"}</Text>
-          <Text fz="xs" c="dimmed">
-            {description ?? "No description"}
-          </Text>
-          <Badge variant="outline">New</Badge>
-        </div>
+        <Text fw={500}>{name ?? "Unnamed"}</Text>
+        <Text fz="xs" c="dimmed">
+          {description ?? "No description"}
+        </Text>
+        <Badge variant="outline">New</Badge>
       </Group>
       <Card.Section className={classes.section}>
         {buy ? (

@@ -1,9 +1,9 @@
+import React, { useEffect, useState } from "react";
 import { Container, createStyles } from "@mantine/core";
 import { Text, Title } from "@mantine/core";
-import React, { useEffect, useState } from "react";
-import { CollectionTable } from "../CollectionTable/CollectionTable";
 
-import { CHAIN_NAME, client } from "../../api/immutable";
+import { CollectionTable } from "@/components/CollectionTable/CollectionTable";
+import { CHAIN_NAME, client } from "@/api/immutable";
 
 const style = createStyles((theme: any) => ({
   title: {

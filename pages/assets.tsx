@@ -1,8 +1,9 @@
-import { Web3Context } from "@/Web3ProviderContext";
-import { Container, Title } from "@mantine/core";
 import React, { useContext, useEffect, useState } from "react";
-import { CHAIN_NAME, client } from "../api/immutable";
-import { NFTCard } from "../components/NFTCard/NFTCard";
+import { Container, Group, Title } from "@mantine/core";
+
+import { Web3Context } from "@/contexts/Web3ProviderContext";
+import { NFTCard } from "@/components/NFTCard/NFTCard";
+import { CHAIN_NAME, client } from "@/api/immutable";
 
 export default function Assets() {
   const { web3Provider } = useContext(Web3Context);
@@ -25,10 +26,12 @@ export default function Assets() {
 
   return (
     <Container size="sm">
-      <Title>My Inventory</Title>
-      {nfts.map((x: any, index) => (
-        <NFTCard key={`nft-${index}`} {...x} />
-      ))}
+      <Title sx={{ marginBottom: "2rem" }}>My Inventory</Title>
+      <Group>
+        {nfts.map((x: any, index) => (
+          <NFTCard key={`nft-${index}`} {...x} />
+        ))}
+      </Group>
     </Container>
   );
 }

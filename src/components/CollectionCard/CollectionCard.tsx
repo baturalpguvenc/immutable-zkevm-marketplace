@@ -1,3 +1,4 @@
+import React from "react";
 import { IconBookmark, IconHeart, IconShare } from "@tabler/icons-react";
 import {
   ActionIcon,
@@ -11,7 +12,6 @@ import {
   rem,
   Text,
 } from "@mantine/core";
-import React from "react";
 
 const useStyles = createStyles((theme) => ({
   card: {

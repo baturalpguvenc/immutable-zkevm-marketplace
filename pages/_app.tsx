@@ -1,6 +1,7 @@
 import { useState } from "react";
 import NextApp, { AppContext, AppProps } from "next/app";
 import { getCookie, setCookie } from "cookies-next";
+
 import Head from "next/head";
 import {
   AppShell,
@@ -9,10 +10,10 @@ import {
   MantineProvider,
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import { HeaderSearch } from "../components/HeaderSearch/HeaderSearch";
-import React from "react";
-import { WidgetProvider } from "../src/orchestration";
-import { Web3ProviderContextProvider } from "../src/Web3ProviderContext";
+
+import { Web3ProviderContextProvider } from "@/contexts/Web3ProviderContext";
+import { WidgetProvider } from "@/hooks/orchestration";
+import { HeaderSearch } from "@/components/HeaderSearch/HeaderSearch";
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;

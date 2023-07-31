@@ -1,4 +1,5 @@
 import { useCallback, useContext, useState } from "react";
+import Link from "next/link";
 import {
   Button,
   Container,
@@ -8,15 +9,16 @@ import {
   rem,
   Text,
 } from "@mantine/core";
+
 import { IconWallet } from "@tabler/icons-react";
-import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
-import Link from "next/link";
-import React from "react";
-import { useConnectWidget } from "../../src/useConnectWidget";
-import { hideAllWidgets, WidgetContext } from "../../src/orchestration";
-import { ImmutableWidget } from "../ImmutableWidget/ImmutableWidget";
-import { Web3Context } from "../../src/Web3ProviderContext";
-import { useWalletWidget } from "@/useWalletWidget";
+import { Web3Context } from "@/contexts/Web3ProviderContext";
+
+import { hideAllWidgets, WidgetContext } from "@/hooks/orchestration";
+import { useConnectWidget } from "@/hooks/useConnectWidget";
+import { useWalletWidget } from "@/hooks/useWalletWidget";
+
+import { ImmutableWidget } from "@/components/ImmutableWidget/ImmutableWidget";
+import { ColorSchemeToggle } from "@/components/ColorSchemeToggle/ColorSchemeToggle";
 
 const useStyles = createStyles((theme) => ({
   header: {

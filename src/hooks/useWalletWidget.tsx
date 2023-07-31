@@ -5,7 +5,7 @@ import {
   WalletEventType,
   WalletNetworkSwitchEvent,
 } from "@imtbl/sdk";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import {
   handleOrchestrationEvent,
   hideAllWidgets,

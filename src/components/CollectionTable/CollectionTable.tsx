@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Avatar,
   createStyles,
@@ -8,7 +9,6 @@ import {
   Text,
 } from "@mantine/core";
 import { useRouter } from "next/router";
-import React from "react";
 
 interface CollectionTableProps {
   data: {
@@ -20,7 +20,7 @@ interface CollectionTableProps {
   }[];
 }
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(() => ({
   control: {
     "&:hover": {
       cursor: "pointer",

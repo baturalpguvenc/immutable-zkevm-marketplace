@@ -10,7 +10,7 @@ import {
   WidgetTheme,
 } from "@imtbl/sdk";
 import { Group } from "@mantine/core";
-import { ShowWidget } from "../../src/orchestration";
+import { ShowWidget } from "@/hooks/orchestration";
 import React, { useEffect } from "react";
 
 export interface ImtblWidgetsProps {
