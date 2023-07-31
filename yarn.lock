@@ -911,7 +911,7 @@
     aria-hidden "^1.1.3"
     tabbable "^6.0.1"
 
-"@imtbl/core-sdk@^2.0.1":
+"@imtbl/core-sdk@^2.0.2":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@imtbl/core-sdk/-/core-sdk-2.1.0.tgz#b21202dc5ab55cfcb9a1ad302703506e1bd472f9"
   integrity sha512-RuFaQLCi/p+fWhshcrqhNK6DWd/hTwhp/EyMAePHFxLhDAWGDbuBGKxTRLcHzYmrDcOowDavps7q8o8DqBDVVQ==
@@ -927,17 +927,17 @@
     ethers "^5.6.9"
     hash.js "^1.1.7"
 
-"@imtbl/sdk@0.4.0-alpha":
-  version "0.4.0-alpha"
-  resolved "https://registry.yarnpkg.com/@imtbl/sdk/-/sdk-0.4.0-alpha.tgz#698ab8fcf795715fb8b754d5289ec2387fd2be75"
-  integrity sha512-MKxa9JQyweZt4nE12RAKwpc4Rc2MPO0YWO9MImu0zAEfibHJWSrBx2dw+H2xugsc21egtclzlgLi3Q8S/+Mmvw==
+"@imtbl/sdk@0.4.1-alpha":
+  version "0.4.1-alpha"
+  resolved "https://registry.yarnpkg.com/@imtbl/sdk/-/sdk-0.4.1-alpha.tgz#48a976aa1c0495b245281564d3666990e21049fe"
+  integrity sha512-SY6ck2nrZ6+7laID8YDP9Qls/+sT2WEFZf1IlKV/G8auGEPzqCiHEQzAkzFvfH+txNmxQo4ra6CLttumkVOrCA==
   dependencies:
     "@0xsequence/abi" "^0.43.34"
     "@0xsequence/config" "^0.43.34"
     "@ethersproject/abstract-signer" "^5.7.0"
     "@ethersproject/providers" "^5.7.2"
     "@ethersproject/wallet" "^5.7.0"
-    "@imtbl/core-sdk" "^2.0.1"
+    "@imtbl/core-sdk" "^2.0.2"
     "@jest/globals" "^29.5.0"
     "@magic-ext/oidc" "^1.0.1"
     "@metamask/detect-provider" "^2.0.0"
