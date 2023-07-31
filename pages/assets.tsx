@@ -3,7 +3,7 @@ import { Container, Group, Title } from "@mantine/core";
 
 import { Web3Context } from "@/contexts/Web3ProviderContext";
 import { NFTCard } from "@/components/NFTCard/NFTCard";
-import { CHAIN_NAME, client } from "@/api/immutable";
+import { blockChainSDK, CHAIN_NAME } from "@/sdk/immutable";
 
 export default function Assets() {
   const { web3Provider } = useContext(Web3Context);
@@ -14,7 +14,7 @@ export default function Assets() {
     if (!web3Provider) return;
     const fetchData = async () => {
       const address = await web3Provider.getSigner().getAddress();
-      const response = await client.listNFTsByAccountAddress({
+      const response = await blockChainSDK.listNFTsByAccountAddress({
         chainName: CHAIN_NAME,
         accountAddress: address,
       });

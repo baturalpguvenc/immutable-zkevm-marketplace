@@ -16,7 +16,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconCheck, IconExclamationCircle } from "@tabler/icons-react";
 import React, { useContext, useState } from "react";
-import { orderbookSDK } from "@/api/immutable";
+import { orderbookSDK } from "@/sdk/immutable";
 import { notifications } from "@mantine/notifications";
 
 const useStyles = createStyles((theme) => ({

@@ -4,14 +4,3 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
-
-// module.exports = {
-//   webpack(webpackConfig) {
-//     return {
-//       ...webpackConfig,
-//       optimization: {
-//         minimize: false,
-//       },
-//     };
-//   },
-// };

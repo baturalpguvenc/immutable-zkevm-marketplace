@@ -3,7 +3,7 @@ import { Container, createStyles } from "@mantine/core";
 import { Text, Title } from "@mantine/core";
 
 import { CollectionTable } from "@/components/CollectionTable/CollectionTable";
-import { CHAIN_NAME, client } from "@/api/immutable";
+import { blockChainSDK, CHAIN_NAME } from "@/sdk/immutable";
 
 const style = createStyles((theme: any) => ({
   title: {
@@ -24,7 +24,7 @@ export function Welcome() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await client.listCollections({
+        const response = await blockChainSDK.listCollections({
           chainName: CHAIN_NAME,
         });
         setCollections(response.result);

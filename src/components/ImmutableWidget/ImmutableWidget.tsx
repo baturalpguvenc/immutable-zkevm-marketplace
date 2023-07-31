@@ -22,7 +22,6 @@ export interface ImtblWidgetsProps {
 }
 
 export const ImmutableWidget = ({
-  web3Provider,
   showConnect,
   showWallet,
   showSwap,
@@ -36,8 +35,9 @@ export const ImmutableWidget = ({
       environment: Environment.SANDBOX,
       version: {
         major: 0,
-        minor: 1,
-        patch: 9,
+        minor: 4,
+        patch: 1,
+        prerelease: "alpha" as "alpha",
       },
       isOnRampEnabled: true,
       isBridgeEnabled: true,

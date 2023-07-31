@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { providers } from "ethers";
 
 import {
   Alert,
@@ -14,10 +13,8 @@ import {
 import { notifications } from "@mantine/notifications";
 import { IconAlertCircle, IconCheck } from "@tabler/icons-react";
 
-import { Environment, Orderbook } from "@imtbl/sdk";
-
 import { CollectionCard } from "@/components/CollectionCard/CollectionCard";
-import { CHAIN_NAME, client } from "@/api/immutable";
+import { blockChainSDK, CHAIN_NAME, orderbookSDK } from "@/sdk/immutable";
 import { NFTCard } from "@/components/NFTCard/NFTCard";
 import { Web3Context } from "@/contexts/Web3ProviderContext";
 
@@ -26,43 +23,34 @@ export default function NFTPage() {
   const { address } = router.query;
   // All the NFTS details within a collection
   const [NFTs, setNFTs] = useState([]);
-  // Collection Data
   const [collection, setCollection] = useState(undefined);
+
   // All the listings within the collection
   const [listings, setListings] = useState(undefined);
 
   const { web3Provider } = useContext(Web3Context);
 
-  const orderbookClient = new Orderbook({
-    baseConfig: {
-      environment: Environment.SANDBOX,
-    },
-    overrides: {
-      provider: new providers.JsonRpcProvider(
-        "https://zkevm-rpc.sandbox.x.immutable.com"
-      ),
-    },
-  });
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Collection
-        const cres = await client.getCollection({
+        // Collections
+        const cres = await blockChainSDK.getCollection({
           chainName: CHAIN_NAME,
           contractAddress: String(address),
         });
         console.log(cres.result);
         setCollection(cres.result as any);
+
         // NFTS
-        const response = await client.listNFTs({
+        const response = await blockChainSDK.listNFTs({
           chainName: CHAIN_NAME,
           contractAddress: String(address),
           pageSize: 200,
         });
         setNFTs(response.result as any);
+
         // Listings
-        const lres = await orderbookClient.listListings({
+        const lres = await orderbookSDK.listListings({
           chainName: CHAIN_NAME,
           status: "ACTIVE",
           contractAddress: String(address),
