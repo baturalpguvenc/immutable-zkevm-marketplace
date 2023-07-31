@@ -95,7 +95,6 @@ export function HeaderSearch({ links }: HeaderSearchProps) {
   const [opened, { toggle }] = useDisclosure(false);
   const { classes, cx } = useStyles();
   const [active, setActive] = useState(links[0].link);
-  const spotlight = useSpotlight();
 
   // Widget stuff
   // widget context state for showing/hiding widgets
@@ -149,20 +148,7 @@ export function HeaderSearch({ links }: HeaderSearchProps) {
           <Group ml={50} spacing={5} className={classes.links}>
             {items}
           </Group>
-          <Autocomplete
-            className={classes.search}
-            placeholder="Search Collections..."
-            icon={<IconSearch size="1rem" stroke={1.5} />}
-            onClick={() => {
-              spotlight.openSpotlight();
-            }}
-            data={[]}
-          />
           <ColorSchemeToggle />
-          <UserMenu />
-          <ActionIcon variant="light" size="lg">
-            <IconShoppingCart size="1rem" />
-          </ActionIcon>
           <Button
             leftIcon={<IconWallet size="1rem" />}
             onClick={web3Provider ? openWalletWidget : openConnectWidget}

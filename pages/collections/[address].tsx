@@ -93,23 +93,18 @@ export default function NFTPage() {
           (x as any).id,
           address
         );
+        console.log('xxxx')
         const { unsignedFulfillmentTransaction } = fulfillResponse;
         if (unsignedFulfillmentTransaction) {
-          // signer.sendTransaction()
-          // const signedFulfillTx = await signer.signTransaction(
-          //   unsignedFulfillmentTransaction
-          // );
-          unsignedFulfillmentTransaction.value =
-            unsignedFulfillmentTransaction.value.toHexString();
-
-          unsignedFulfillmentTransaction.gasLimit =
-            unsignedFulfillmentTransaction.gasLimit.toHexString();
-
           console.log("fulfilled", unsignedFulfillmentTransaction);
 
-          const receipt = await web3Provider.send("eth_sendTransaction", [
-            unsignedFulfillmentTransaction,
-          ]);
+          const receipt = await signer.sendTransaction(
+            unsignedFulfillmentTransaction
+          );
+
+          // const receipt = await web3Provider.send("eth_sendTransaction", [
+          //   unsignedFulfillmentTransaction,
+          // ]);
 
           // const receipt = await web3Provider.sendTransaction(
           //   unsignedFulfillmentTransaction

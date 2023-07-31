@@ -189,7 +189,7 @@ export function NFTCard({
           <Group spacing={10}>
             <Stack>
               <Text fz="md" fw={700} sx={{ lineHeight: 1 }}>
-                {listing.start_amount.toString()}~
+                {(listing.start_amount / 1e18).toString()}&nbsp;
                 {listing.item_type === "NATIVE" ? "IMX" : listing.item_type}
               </Text>
               <Text

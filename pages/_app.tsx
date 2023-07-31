@@ -52,12 +52,6 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
             withGlobalStyles
             withNormalizeCSS
           >
-            <SpotlightProvider
-              shortcut={["mod + P", "mod + K", "/"]}
-              actions={[]}
-              searchIcon={<IconSearch size="1.2rem" />}
-              searchPlaceholder="Search..."
-            >
               <WidgetProvider>
                 <AppShell
                   header={
@@ -68,10 +62,6 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
                           label: "Assets",
                           link: "/assets",
                         },
-                        {
-                          label: "Mint",
-                          link: "/mint",
-                        },
                       ]}
                     />
                   }
@@ -79,7 +69,6 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
                   <Component {...pageProps} />
                 </AppShell>
               </WidgetProvider>
-            </SpotlightProvider>
             <Notifications />
           </MantineProvider>
         </ColorSchemeProvider>
