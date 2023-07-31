@@ -51,12 +51,18 @@ export default function NFTPage() {
 
         // Listings
         const lres = await orderbookSDK.listListings({
-          chainName: CHAIN_NAME,
           status: "ACTIVE",
-          contractAddress: String(address),
+          sellItemContractAddress: String(address),
         });
-        console.log(lres);
-        setListings(lres.result as any);
+
+
+        let filteredListings = lres.result
+        if (web3Provider) {
+          const signer = web3Provider!.getSigner();
+          const userAddress = await signer.getAddress();
+          filteredListings = lres.result.filter(l => l.account_address !== userAddress.toLocaleLowerCase());
+        }
+        setListings(filteredListings as any);
       } catch (error) {
         console.error("Error fetching collections:", error);
       }
