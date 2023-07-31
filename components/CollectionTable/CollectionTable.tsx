@@ -1,8 +1,5 @@
 import {
-  ActionIcon,
-  Anchor,
   Avatar,
-  Badge,
   createStyles,
   Group,
   ScrollArea,
@@ -11,7 +8,6 @@ import {
   Text,
   useMantineTheme,
 } from "@mantine/core";
-import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -34,7 +30,6 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export function CollectionTable({ data }: CollectionTableProps) {
-  const theme = useMantineTheme();
   const { classes } = useStyles();
   const router = useRouter();
 
@@ -50,11 +45,7 @@ export function CollectionTable({ data }: CollectionTableProps) {
     >
       <td>
         <Group spacing="sm">
-          <Avatar
-            size="xl"
-            src={item.image}
-            radius={30}
-          />
+          <Avatar size="xl" src={item.image} radius={30} />
         </Group>
       </td>
 

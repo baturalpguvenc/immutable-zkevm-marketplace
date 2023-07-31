@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import NextApp, { AppContext, AppProps } from "next/app";
 import { getCookie, setCookie } from "cookies-next";
 import Head from "next/head";
@@ -10,8 +10,6 @@ import {
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { HeaderSearch } from "../components/HeaderSearch/HeaderSearch";
-import { IconSearch } from "@tabler/icons-react";
-import { SpotlightProvider } from "@mantine/spotlight";
 import React from "react";
 import { WidgetProvider } from "../src/orchestration";
 import { Web3ProviderContextProvider } from "../src/Web3ProviderContext";
@@ -34,7 +32,7 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   return (
     <>
       <Head>
-        <title>Demarkt</title>
+        <title>Marketplace</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
@@ -52,23 +50,23 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
             withGlobalStyles
             withNormalizeCSS
           >
-              <WidgetProvider>
-                <AppShell
-                  header={
-                    <HeaderSearch
-                      links={[
-                        { label: "Home", link: "/" },
-                        {
-                          label: "Assets",
-                          link: "/assets",
-                        },
-                      ]}
-                    />
-                  }
-                >
-                  <Component {...pageProps} />
-                </AppShell>
-              </WidgetProvider>
+            <WidgetProvider>
+              <AppShell
+                header={
+                  <HeaderSearch
+                    links={[
+                      { label: "Home", link: "/" },
+                      {
+                        label: "Assets",
+                        link: "/assets",
+                      },
+                    ]}
+                  />
+                }
+              >
+                <Component {...pageProps} />
+              </AppShell>
+            </WidgetProvider>
             <Notifications />
           </MantineProvider>
         </ColorSchemeProvider>

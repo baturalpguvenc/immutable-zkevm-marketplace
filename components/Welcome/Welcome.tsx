@@ -41,7 +41,7 @@ export function Welcome() {
     <>
       <Title className={classes.title} align="center" mt={100}>
         <Text inherit variant="gradient" component="span" color="pink">
-          Demarkt
+          Marketplace
         </Text>
       </Title>
       <Text

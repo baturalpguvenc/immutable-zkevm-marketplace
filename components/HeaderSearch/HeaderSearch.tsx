@@ -1,8 +1,5 @@
 import { useCallback, useContext, useState } from "react";
-import { useSpotlight } from "@mantine/spotlight";
 import {
-  ActionIcon,
-  Autocomplete,
   Button,
   Container,
   createStyles,
@@ -12,16 +9,9 @@ import {
   Text,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconArrowBigUpLinesFilled,
-  IconHttpConnect,
-  IconSearch,
-  IconShoppingCart,
-  IconWallet,
-} from "@tabler/icons-react";
+import { IconWallet } from "@tabler/icons-react";
 import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
 import Link from "next/link";
-import { UserMenu } from "../UserMenu/UserMenu";
 import React from "react";
 import { useConnectWidget } from "../../src/useConnectWidget";
 import { hideAllWidgets, WidgetContext } from "../../src/orchestration";
@@ -140,7 +130,7 @@ export function HeaderSearch({ links }: HeaderSearchProps) {
       <Container size="lg" className={classes.inner}>
         <Group spacing="xs">
           <Text variant="gradient" component="span" weight="600">
-            Demarkt
+            Marketplace
           </Text>
         </Group>
 

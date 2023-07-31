@@ -18,7 +18,6 @@ import { IconCheck, IconExclamationCircle } from "@tabler/icons-react";
 import React, { useContext, useState } from "react";
 import { orderbookSDK } from "../../api/immutable";
 import { notifications } from "@mantine/notifications";
-import { AxiosError } from "axios";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -89,7 +88,7 @@ export function NFTCard({
   const [loading, setLoading] = useState(false);
   const [buying, setBuying] = useState(false);
   const theme = useMantineTheme();
-  const { web3Provider, setWeb3Provider } = useContext(Web3Context);
+  const { web3Provider } = useContext(Web3Context);
 
   const handleClick = async () => {
     setBuying(true);
