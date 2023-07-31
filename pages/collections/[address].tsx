@@ -88,7 +88,7 @@ export default function NFTPage() {
         const address = await signer.getAddress();
 
         console.log("Buying", x, address, signer);
-        const fulfillResponse = await orderbookClient.fulfillOrder(
+        const fulfillResponse = await orderbookSDK.fulfillOrder(
           (x as any).id,
           address
         );

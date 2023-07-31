@@ -72,6 +72,8 @@ interface NFTCardProps {
   onClick?: () => Promise<void>;
 }
 
+const WEI = 1e18;
+
 export function NFTCard({
   token_id,
   contract_address,
@@ -84,7 +86,7 @@ export function NFTCard({
   const { classes } = useStyles();
   const [listing] = buy || [];
   const [opened, { toggle, close }] = useDisclosure(false);
-  const [amount, setAmount] = useState(10000000000);
+  const [amount, setAmount] = useState(0.001);
   const [loading, setLoading] = useState(false);
   const [buying, setBuying] = useState(false);
   const theme = useMantineTheme();
@@ -107,7 +109,7 @@ export function NFTCard({
       const listing = await orderbookSDK.prepareListing({
         makerAddress: offerer,
         buy: {
-          amount: amount,
+          amount: amount * WEI,
           type: "NATIVE",
         },
         sell: {
@@ -186,7 +188,7 @@ export function NFTCard({
           <Group spacing={10}>
             <Stack>
               <Text fz="md" fw={700} sx={{ lineHeight: 1 }}>
-                {(listing.start_amount / 1e18).toString()}&nbsp;
+                {(listing.start_amount / WEI).toString()}&nbsp;
                 {listing.item_type === "NATIVE" ? "IMX" : listing.item_type}
               </Text>
               <Text
@@ -227,7 +229,7 @@ export function NFTCard({
             >
               <TextInput
                 type="number"
-                placeholder="1000"
+                placeholder="0.001"
                 label="Sell amount"
                 value={amount}
                 onChange={(e) => {

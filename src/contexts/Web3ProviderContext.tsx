@@ -4,7 +4,7 @@ import { providers } from "ethers";
 
 declare global {
   interface Window {
-    ethereum: providers.ExternalProvider | providers.JsonRpcFetchFunc; // Adjust this based on the type of providers.Web3Provider
+    ethereum: providers.ExternalProvider | providers.JsonRpcFetchFunc;
   }
 }
 
