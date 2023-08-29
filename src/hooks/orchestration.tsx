@@ -1,10 +1,11 @@
-import { OrchestrationEventType } from "@imtbl/sdk";
+import { checkoutWidgets } from "@imtbl/sdk";
 import React, {
   createContext,
   Dispatch,
   SetStateAction,
   useState,
 } from "react";
+
 export interface ShowWidget {
   show: boolean;
   data: any;
@@ -23,6 +24,8 @@ export const hideAllWidgets: WidgetState = {
   showSwap: { show: false, data: {} },
   showBridge: { show: false, data: {} },
 };
+
+const { OrchestrationEventType } = checkoutWidgets;
 
 export function handleOrchestrationEvent(
   event: CustomEvent,

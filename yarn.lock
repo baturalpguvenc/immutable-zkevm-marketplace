@@ -927,10 +927,10 @@
     ethers "^5.6.9"
     hash.js "^1.1.7"
 
-"@imtbl/sdk@0.4.1-alpha":
-  version "0.4.1-alpha"
-  resolved "https://registry.yarnpkg.com/@imtbl/sdk/-/sdk-0.4.1-alpha.tgz#48a976aa1c0495b245281564d3666990e21049fe"
-  integrity sha512-SY6ck2nrZ6+7laID8YDP9Qls/+sT2WEFZf1IlKV/G8auGEPzqCiHEQzAkzFvfH+txNmxQo4ra6CLttumkVOrCA==
+"@imtbl/sdk@0.15.0-alpha":
+  version "0.15.0-alpha"
+  resolved "https://registry.yarnpkg.com/@imtbl/sdk/-/sdk-0.15.0-alpha.tgz#fc27aec127f9d88dc44ef6dc2558ead336033cd5"
+  integrity sha512-XcsofwwiB/c9f9gwiMZa2sJVt5nhUDaYy5K+8TupNIbiZ47oCWpN1C/uTv9/b7hb0A8uDUh74qaPaas9OrJqUA==
   dependencies:
     "@0xsequence/abi" "^0.43.34"
     "@0xsequence/config" "^0.43.34"
@@ -941,7 +941,7 @@
     "@jest/globals" "^29.5.0"
     "@magic-ext/oidc" "^1.0.1"
     "@metamask/detect-provider" "^2.0.0"
-    "@opensea/seaport-js" "2.0.5"
+    "@opensea/seaport-js" "2.0.7"
     "@uniswap/router-sdk" "^1.4.0"
     "@uniswap/sdk-core" "^3.0.1"
     "@uniswap/v3-sdk" "^3.9.0"
@@ -1237,10 +1237,10 @@
   resolved "https://registry.yarnpkg.com/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-13.4.7.tgz#5137780f58d7f0230adc293a0429821bfa7d8c21"
   integrity sha512-sW9Yt36Db1nXJL+mTr2Wo0y+VkPWeYhygvcHj1FF0srVtV+VoDjxleKtny21QHaG05zdeZnw2fCtf2+dEqgwqA==
 
-"@opensea/seaport-js@2.0.5":
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/@opensea/seaport-js/-/seaport-js-2.0.5.tgz#aa029e9aa29ea30377a82a9a254b9fdf1a854803"
-  integrity sha512-Ay0fMNj8p94jtl14bDlu0VKfSV47BYTy21z/wIl8NdsdTSxFXyomAGxTYOedXqknIR7FeNL+N9JuJDkLzJRU3g==
+"@opensea/seaport-js@2.0.7":
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/@opensea/seaport-js/-/seaport-js-2.0.7.tgz#adae5a975ca7460a5b144dbed318536407d01f30"
+  integrity sha512-GP9LVGj5mXsBFQc4N5RYXGudYpyyrvc3F5NuHMYe2da61uahIkj+3ifh0rl8TFw5v+atwYtfUycHGIkCX0B68A==
   dependencies:
     "@0xsequence/multicall" "^0.43.29"
     ethers "^5.7.2"

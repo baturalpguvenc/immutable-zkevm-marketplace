@@ -1,13 +1,11 @@
 import { Web3Provider } from "@ethersproject/providers";
-import {
-  ConnectEventType,
-  ConnectionSuccess,
-  IMTBLWidgetEvents,
-  OrchestrationEventType,
-} from "@imtbl/sdk";
+import { checkoutWidgets } from "@imtbl/sdk";
 import { useContext, useEffect } from "react";
 import { handleOrchestrationEvent } from "./orchestration";
 import { hideAllWidgets, WidgetContext } from "./orchestration";
+
+const { IMTBLWidgetEvents, OrchestrationEventType, ConnectEventType } =
+  checkoutWidgets;
 
 export function useConnectWidget(setWeb3Provider: (val: Web3Provider) => void) {
   const { showWidgets, setShowWidgets } = useContext(WidgetContext);
@@ -17,8 +15,7 @@ export function useConnectWidget(setWeb3Provider: (val: Web3Provider) => void) {
     const handleConnectEvent = ((event: CustomEvent) => {
       switch (event.detail.type) {
         case ConnectEventType.SUCCESS: {
-          const eventData = event.detail.data as ConnectionSuccess;
-          console.log("eventData", eventData);
+          const eventData = event.detail.data;
           setWeb3Provider(eventData.provider);
           break;
         }

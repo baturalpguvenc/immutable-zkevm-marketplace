@@ -1,16 +1,14 @@
 import { Web3Provider } from "@ethersproject/providers";
-import {
-  IMTBLWidgetEvents,
-  OrchestrationEventType,
-  WalletEventType,
-  WalletNetworkSwitchEvent,
-} from "@imtbl/sdk";
+import { checkoutWidgets } from "@imtbl/sdk";
 import { useContext, useEffect } from "react";
 import {
   handleOrchestrationEvent,
   hideAllWidgets,
   WidgetContext,
 } from "./orchestration";
+
+const { IMTBLWidgetEvents, OrchestrationEventType, WalletEventType } =
+  checkoutWidgets;
 
 export function useWalletWidget(
   setWeb3Provider: (val: Web3Provider | undefined) => void
@@ -22,8 +20,7 @@ export function useWalletWidget(
     const handleWalletWidgetEvents = ((event: CustomEvent) => {
       switch (event.detail.type) {
         case WalletEventType.NETWORK_SWITCH: {
-          const eventData = event.detail.data as WalletNetworkSwitchEvent;
-          console.log(eventData.network);
+          const eventData = event.detail.data;
           setWeb3Provider(eventData.provider);
           break;
         }

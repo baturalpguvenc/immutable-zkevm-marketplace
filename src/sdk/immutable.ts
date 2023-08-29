@@ -1,26 +1,21 @@
-import {
-  BlockchainData,
-  Environment,
-  ImmutableConfiguration,
-  Orderbook,
-} from "@imtbl/sdk";
+import { blockchainData, config, orderbook } from "@imtbl/sdk";
 import { providers } from "ethers";
 
-export const ENVIRONMENT_SDK = Environment.SANDBOX;
+export const ENVIRONMENT_SDK = config.Environment.SANDBOX;
 export const CHAIN_NAME: string = "imtbl-zkevm-testnet";
 
-export const blockChainSDK = new BlockchainData({
-  baseConfig: new ImmutableConfiguration({
+export const blockChainSDK = new blockchainData.BlockchainData({
+  baseConfig: new config.ImmutableConfiguration({
     environment: ENVIRONMENT_SDK,
   }),
 });
 
-export const orderbookSDK = new Orderbook({
-  baseConfig: { environment: Environment.SANDBOX },
+export const orderbookSDK = new orderbook.Orderbook({
+  baseConfig: { environment: config.Environment.SANDBOX },
   overrides: {
     provider: new providers.JsonRpcProvider(
       // If white-listed; replace with the public rpc endpoint
-      "https://zkevm-rpc.sandbox.x.immutable.com"
+      "https://rpc.testnet.immutable.com"
     ),
   },
 });

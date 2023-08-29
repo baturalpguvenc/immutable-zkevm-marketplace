@@ -1,17 +1,9 @@
 import { Web3Provider } from "@ethersproject/providers";
-import {
-  BridgeReact,
-  CheckoutWidgets,
-  ConnectReact,
-  Environment,
-  SwapReact,
-  WalletProviderName,
-  WalletReact,
-  WidgetTheme,
-} from "@imtbl/sdk";
+import { checkoutWidgets, config } from "@imtbl/sdk";
 import { Group } from "@mantine/core";
 import { ShowWidget } from "@/hooks/orchestration";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
+import { Web3Context } from "@/contexts/Web3ProviderContext";
 
 export interface ImtblWidgetsProps {
   web3Provider?: Web3Provider;
@@ -21,46 +13,49 @@ export interface ImtblWidgetsProps {
   showBridge: ShowWidget;
 }
 
+const {
+  BridgeReact,
+  CheckoutWidgets,
+  ConnectReact,
+  SwapReact,
+  WalletReact,
+  WidgetTheme,
+} = checkoutWidgets;
+
+const { Environment } = config;
+
 export const ImmutableWidget = ({
   showConnect,
   showWallet,
   showSwap,
   showBridge,
 }: ImtblWidgetsProps) => {
-  const walletProvider = WalletProviderName.METAMASK;
+  const { web3Provider } = useContext(Web3Context);
   // Set widget's config
   useEffect(() => {
-    const widgetsConfig = {
-      theme: WidgetTheme.DARK,
+    CheckoutWidgets({
       environment: Environment.SANDBOX,
-      version: {
-        major: 0,
-        minor: 4,
-        patch: 1,
-        prerelease: "alpha" as "alpha",
-      },
-      isOnRampEnabled: true,
+      theme: WidgetTheme.DARK,
       isBridgeEnabled: true,
       isSwapEnabled: true,
-    };
-
-    CheckoutWidgets(widgetsConfig);
-    // UpdateConfig(widgetsConfig);
+    });
   }, []);
 
   return (
     <Group>
-      {showConnect.show && <ConnectReact />}
-      {showWallet.show && <WalletReact walletProvider={walletProvider} />}
+      {showConnect.show && <ConnectReact passport={undefined} />}
+      {showWallet.show && (
+        <WalletReact provider={web3Provider} passport={undefined} />
+      )}
       {showSwap.show && (
         <SwapReact
-          walletProvider={walletProvider}
+          provider={web3Provider}
           fromContractAddress={showSwap.data?.fromTokenAddress || ""}
           toContractAddress={showSwap.data?.toTokenAddress || ""}
           amount={showSwap.data?.amount || ""}
         />
       )}
-      {showBridge.show && <BridgeReact walletProvider={walletProvider} />}
+      {showBridge.show && <BridgeReact provider={web3Provider} />}
     </Group>
   );
 };

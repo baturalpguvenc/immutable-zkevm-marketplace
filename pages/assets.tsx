@@ -18,7 +18,6 @@ export default function Assets() {
         chainName: CHAIN_NAME,
         accountAddress: address,
       });
-      console.log("assets", response);
       setNfts(response.result as any);
     };
     fetchData();

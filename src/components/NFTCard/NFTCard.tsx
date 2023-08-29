@@ -17,7 +17,9 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconCheck, IconExclamationCircle } from "@tabler/icons-react";
 import React, { useContext, useState } from "react";
 import { orderbookSDK } from "@/sdk/immutable";
+import { orderbook } from "@imtbl/sdk";
 import { notifications } from "@mantine/notifications";
+import { actionAll } from "@/sdk/orderbook";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -68,7 +70,7 @@ interface NFTCardProps {
   description: string;
   image: string;
   // If listing buy item is not null
-  buy?: any;
+  buy?: orderbook.ERC20Item[] | orderbook.NativeItem[];
   onClick?: () => Promise<void>;
 }
 
@@ -106,42 +108,28 @@ export function NFTCard({
       setLoading(true);
       const signer = web3Provider!.getSigner();
       const offerer = await signer.getAddress();
-      const listing = await orderbookSDK.prepareListing({
-        makerAddress: offerer,
-        buy: {
-          amount: amount * WEI,
-          type: "NATIVE",
-        },
-        sell: {
-          contractAddress: contract_address,
-          tokenId: token_id,
-          type: "ERC721",
-        },
-      });
-      console.log("create and prepare listed!");
+      const { actions, orderComponents, orderHash } =
+        await orderbookSDK.prepareListing({
+          makerAddress: offerer,
+          buy: {
+            amount: (amount * WEI).toString(),
+            type: "NATIVE",
+          },
+          sell: {
+            contractAddress: contract_address,
+            tokenId: token_id,
+            type: "ERC721",
+          },
+        });
+      console.log("Prepare listing", contract_address, token_id);
 
-      // If the user hasn't yet approved the Immutable Seaport contract to transfer assets from this
-      // collection on their behalf they'll need to do so before they create an order
-      if (listing.unsignedApprovalTransaction) {
-        const receipt = await signer.sendTransaction(
-          listing.unsignedApprovalTransaction
-        );
-        await receipt.wait();
-      }
-      console.log("approved", listing.unsignedApprovalTransaction);
-
-      const signature = await signer._signTypedData(
-        listing.typedOrderMessageForSigning.domain,
-        listing.typedOrderMessageForSigning.types,
-        listing.typedOrderMessageForSigning.value
-      );
-      console.log("signed", signature);
+      const [signature] = await actionAll(actions, signer, web3Provider);
 
       const {
         result: { id: orderId },
       } = await orderbookSDK.createListing({
-        orderComponents: listing.orderComponents,
-        orderHash: listing.orderHash,
+        orderComponents: orderComponents,
+        orderHash: orderHash,
         orderSignature: signature,
       });
       if (orderId) {
@@ -156,7 +144,7 @@ export function NFTCard({
       }
     } catch (error: any) {
       setLoading(false);
-      console.log(error);
+      console.error(error);
       notifications.show({
         title: "Order failed to create",
         color: "red",
@@ -188,8 +176,8 @@ export function NFTCard({
           <Group spacing={10}>
             <Stack>
               <Text fz="md" fw={700} sx={{ lineHeight: 1 }}>
-                {(listing.start_amount / WEI).toString()}&nbsp;
-                {listing.item_type === "NATIVE" ? "IMX" : listing.item_type}
+                {(Number(listing.amount) / WEI).toString()}&nbsp;
+                {listing.type === "NATIVE" ? "IMX" : listing.type}
               </Text>
               <Text
                 fz="sm"
