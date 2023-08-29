@@ -1,6 +1,5 @@
 import { Web3Context } from "@/contexts/Web3ProviderContext";
 import {
-  Badge,
   Button,
   Card,
   createStyles,
@@ -11,6 +10,7 @@ import {
   Stack,
   Text,
   TextInput,
+  Tooltip,
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -48,7 +48,7 @@ const useStyles = createStyles((theme) => ({
   },
 
   section: {
-    padding: theme.spacing.md,
+    padding: theme.spacing.sm,
     borderTop: `${rem(1)} solid ${
       theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
     }`,
@@ -69,12 +69,17 @@ interface NFTCardProps {
   name: string;
   description: string;
   image: string;
+  fees: orderbook.Fee[];
   // If listing buy item is not null
   buy?: orderbook.ERC20Item[] | orderbook.NativeItem[];
   onClick?: () => Promise<void>;
 }
 
 const WEI = 1e18;
+const USD = 1644.21;
+
+// Placeholder marketplace fee recipient address
+const MARKETPLACE_FEE_RECIPIENT = "0x3e290FE8F2A5dB60A81cb47EA296e0299048Dd71";
 
 export function NFTCard({
   token_id,
@@ -83,6 +88,7 @@ export function NFTCard({
   description,
   image,
   buy,
+  fees,
   onClick,
 }: NFTCardProps) {
   const { classes } = useStyles();
@@ -93,6 +99,20 @@ export function NFTCard({
   const [buying, setBuying] = useState(false);
   const theme = useMantineTheme();
   const { web3Provider } = useContext(Web3Context);
+
+  const royalty = fees.find((fee) => fee.type === orderbook.FeeType.ROYALTY);
+  const protocol = fees.find((fee) => fee.type === orderbook.FeeType.PROTOCOL);
+  const maker: orderbook.Fee = {
+    type: orderbook.FeeType.MAKER_MARKETPLACE,
+    amount: ((3 / 100) * Number(listing.amount)).toString(),
+    recipient: MARKETPLACE_FEE_RECIPIENT,
+  };
+  const total =
+    (Number(listing.amount) +
+      (Number(protocol?.amount) ?? 0) +
+      (Number(royalty?.amount) ?? 0) +
+      (Number(maker?.amount) ?? 0)) /
+    WEI;
 
   const handleClick = async () => {
     setBuying(true);
@@ -156,50 +176,86 @@ export function NFTCard({
 
   return (
     <Card withBorder radius="md" className={classes.card}>
-      <Card.Section className={classes.imageSection} sx={{ minHeight: 170 }}>
-        <Image
-          src={
-            image ?? "https://cdn-icons-png.flaticon.com/512/6230/6230226.png"
-          }
-          alt={description}
-        />
-      </Card.Section>
-      <Group position="apart" mt="md" mb="md" sx={{ minHeight: 125 }}>
-        <Text fw={500}>{name ?? "Unnamed"}</Text>
-        <Text fz="xs" c="dimmed">
-          {description ?? "No description"}
-        </Text>
-        <Badge variant="outline">New</Badge>
-      </Group>
+      <Image
+        src={image ?? "https://cdn-icons-png.flaticon.com/512/6230/6230226.png"}
+        alt={description}
+      />
       <Card.Section className={classes.section}>
-        {buy ? (
-          <Group spacing={10}>
-            <Stack>
-              <Text fz="md" fw={700} sx={{ lineHeight: 1 }}>
-                {(Number(listing.amount) / WEI).toString()}&nbsp;
-                {listing.type === "NATIVE" ? "IMX" : listing.type}
-              </Text>
-              <Text
-                fz="sm"
-                c="dimmed"
-                fw={500}
-                sx={{ lineHeight: 1.5 }}
-                ml="md"
-              ></Text>
+        <Group position="apart" sx={{ minHeight: 55 }}>
+          <Text fw={500}>{name ?? "Unnamed"}</Text>
+          {description && (
+            <Text fz="xs" c="dimmed">
+              {description ?? "No description"}
+            </Text>
+          )}
+        </Group>
+        <Tooltip
+          label={
+            <Stack spacing="xss">
+              <Group position="apart">
+                <Text>Base :</Text>
+                <Text>{Number(listing.amount) / WEI}</Text>
+              </Group>
+              {protocol && (
+                <Group position="apart">
+                  <Text>Protocol fee:</Text>
+                  <Text>{Number(protocol.amount) / WEI}</Text>
+                </Group>
+              )}
+              {royalty && (
+                <Group position="apart">
+                  <Text>Royalty fee:</Text>
+                  <Text>{Number(royalty.amount) / WEI}</Text>
+                </Group>
+              )}
+              {maker && (
+                <Group position="apart">
+                  <Text>Maker fee:</Text>
+                  <Text>{Number(maker.amount) / WEI}</Text>
+                </Group>
+              )}
+              <Group position="apart">
+                <Text>Total:</Text>
+                <Text>{total}</Text>
+              </Group>
             </Stack>
-
-            <Button
-              radius="xl"
-              style={{ flex: 1 }}
-              onClick={handleClick}
-              loading={buying}
-            >
-              Buy now
-            </Button>
-          </Group>
+          }
+        >
+          <Stack align="stretch" spacing="xss" mb="sm">
+            <Text fz={8} tt="uppercase" c="dimmed" fw={700}>
+              Fees included ⓘ
+            </Text>
+            <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
+              {listing.type === "NATIVE" ? "IMX" : listing.type}&nbsp;
+            </Text>
+            <Group position="apart">
+              <Text fz="md" fw={700} sx={{ lineHeight: 1 }}>
+                {total.toString()}&nbsp;
+              </Text>
+              <Text fz={10} fw={700} c="indigo">
+                {(total * USD).toFixed(2)} USD
+              </Text>
+            </Group>
+          </Stack>
+        </Tooltip>
+        {buy ? (
+          <Button
+            radius="xl"
+            onClick={handleClick}
+            loading={buying}
+            variant="gradient"
+            fullWidth
+          >
+            Buy now
+          </Button>
         ) : (
           <>
-            <Button radius="xl" style={{ flex: 1 }} onClick={toggle}>
+            <Button
+              variant="gradient"
+              radius="xl"
+              style={{ flex: 1 }}
+              onClick={toggle}
+            >
               Sell
             </Button>
             <Modal

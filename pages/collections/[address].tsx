@@ -8,10 +8,18 @@ import {
   Grid,
   Group,
   Skeleton,
+  Stack,
+  Tabs,
   Text,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { IconAlertCircle, IconCheck } from "@tabler/icons-react";
+import {
+  IconAlertCircle,
+  IconCheck,
+  IconMessageCircle,
+  IconPhoto,
+  IconSettings,
+} from "@tabler/icons-react";
 
 import { CollectionCard } from "@/components/CollectionCard/CollectionCard";
 import { blockChainSDK, CHAIN_NAME, orderbookSDK } from "@/sdk/immutable";
@@ -19,6 +27,7 @@ import { NFTCard } from "@/components/NFTCard/NFTCard";
 import { Web3Context } from "@/contexts/Web3ProviderContext";
 import { orderbook } from "@imtbl/sdk";
 import { actionAll } from "@/sdk/orderbook";
+import { CollectionInfo } from "@/components/CollectionInfo/CollectionInfo";
 
 export default function NFTPage() {
   const router = useRouter();
@@ -75,6 +84,7 @@ export default function NFTPage() {
     fetchData();
   }, []);
 
+  console.log(listings, collection);
   if (listings === undefined || collection === undefined) {
     return (
       <Container>
@@ -134,41 +144,59 @@ export default function NFTPage() {
   const { name, description, image, updated_at } = collection;
 
   return (
-    <Container size="lg">
-      <Grid>
-        <Grid.Col xs={4}>
-          <CollectionCard
-            title={name}
-            description={description}
-            image={image}
-            author={{
-              image: "",
-              name: `Created at ${new Date(updated_at).toLocaleString()}`,
-            }}
-          />
-        </Grid.Col>
-        <Grid.Col xs={8}>
-          {listings.length > 0 ? (
-            <Group>
-              {listingsWithDetails.map((x: any, index) => (
-                <NFTCard key={`nft-${index}`} {...x} />
-              ))}
-            </Group>
-          ) : (
-            <Center>
-              <Alert
-                icon={<IconAlertCircle size="1rem" />}
-                title="Bummer!"
-                color="gray"
-                variant="filled"
-              >
-                No listings available! :(
-                <Text>Come back and check again next time.</Text>
-              </Alert>
-            </Center>
-          )}
-        </Grid.Col>
-      </Grid>
+    <Container size="md">
+      <Stack>
+        <CollectionInfo
+          title="Collection"
+          name={name}
+          description={description}
+          avatar={image}
+          created={`Created at ${new Date(updated_at).toLocaleString()}`}
+        />
+        <Grid>
+          <Grid.Col xs={12}>
+            <Tabs radius="md" defaultValue="gallery">
+              <Tabs.List>
+                <Tabs.Tab value="gallery" icon={<IconPhoto size="0.8rem" />}>
+                  Listings
+                </Tabs.Tab>
+                <Tabs.Tab
+                  value="messages"
+                  icon={<IconMessageCircle size="0.8rem" />}
+                >
+                  Offers
+                </Tabs.Tab>
+              </Tabs.List>
+
+              <Tabs.Panel value="gallery" pt="xs">
+                {listingsWithDetails.length > 0 ? (
+                  <Group mt="sm">
+                    {listingsWithDetails.map((x: any, index) => (
+                      <NFTCard key={`nft-${index}`} {...x} />
+                    ))}
+                  </Group>
+                ) : (
+                  <Center>
+                    <Alert
+                      icon={<IconAlertCircle size="1rem" />}
+                      title="Bummer!"
+                      color="gray"
+                      variant="filled"
+                    >
+                      No listings available! :(
+                      <Text>Come back and check again next time.</Text>
+                    </Alert>
+                  </Center>
+                )}
+              </Tabs.Panel>
+
+              <Tabs.Panel value="messages" pt="xs">
+                Offers coming soon!
+              </Tabs.Panel>
+            </Tabs>
+          </Grid.Col>
+        </Grid>
+      </Stack>
     </Container>
   );
 }
