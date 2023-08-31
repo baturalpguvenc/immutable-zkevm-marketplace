@@ -8,6 +8,14 @@ import { orderbook } from "@imtbl/sdk";
 const { ActionType } = orderbook;
 import { JsonRpcSigner } from "@ethersproject/providers";
 
+export const WEI = 1e18;
+// Bespoke USD price
+export const USD = 1644.21;
+
+// Placeholder marketplace fee recipient address, replace with your own wallet address
+export const MARKETPLACE_FEE_RECIPIENT =
+  "0xca65c6c80562163D49bD12690c2C7aE7d005c6Fb";
+
 // Sign and submit all transaction actions. Collect and return all signatures from signable actions.
 export async function actionAll(
   actions: orderbook.Action[],

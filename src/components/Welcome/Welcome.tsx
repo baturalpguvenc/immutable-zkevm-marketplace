@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Container, createStyles } from "@mantine/core";
+import { Container, createStyles, SimpleGrid, Skeleton } from "@mantine/core";
 import { Text, Title } from "@mantine/core";
 
-import { CollectionTable } from "@/components/CollectionTable/CollectionTable";
 import { blockChainSDK, CHAIN_NAME } from "@/sdk/immutable";
+import { CollectionButton } from "../CollectionButton/CollectionButton";
 
 const style = createStyles((theme: any) => ({
   title: {
@@ -20,7 +20,7 @@ const style = createStyles((theme: any) => ({
 
 export function Welcome() {
   const { classes } = style();
-  const [collections, setCollections] = useState([]);
+  const [collections, setCollections] = useState<any>([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,23 +38,45 @@ export function Welcome() {
 
   return (
     <>
-      <Title className={classes.title} align="center" mt={100}>
+      <Title className={classes.title} align="center" mt={50}>
         <Text inherit variant="gradient" component="span" color="pink">
           Marketplace
         </Text>
       </Title>
       <Text
-        color="dimmed"
+        tt="capitalize"
         align="center"
         size="lg"
+        fw="700"
         sx={{ maxWidth: 580 }}
         mx="auto"
         mt="xl"
+        mb="sm"
       >
-        Your marketplace
+        Your marketplace collections
       </Text>
       <Container size="lg">
-        <CollectionTable data={collections} />
+        {collections.length > 0 ? (
+          <SimpleGrid cols={3}>
+            {collections.map((c: any, index: number) => (
+              <CollectionButton
+                key={`col-${index}`}
+                contractAddress={c.contract_address}
+                image={c.image}
+                description={c.description}
+                name={c.name}
+                updatedAt={c.updated_at}
+              />
+            ))}
+          </SimpleGrid>
+        ) : (
+          <>
+            <Skeleton height={50} circle mb="xl" />
+            <Skeleton height={8} radius="xl" />
+            <Skeleton height={8} mt={6} radius="xl" />
+            <Skeleton height={8} mt={6} width="70%" radius="xl" />
+          </>
+        )}
       </Container>
     </>
   );
