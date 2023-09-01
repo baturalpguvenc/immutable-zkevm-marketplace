@@ -60,7 +60,7 @@ export default function NFTPage() {
           sellItemContractAddress: String(address),
         });
 
-        let filteredListings: orderbook.Order[] = [];
+        let filteredListings: orderbook.Order[] = lres.result;
         if (userAddress) {
           filteredListings = lres.result.filter(
             (l) => l.accountAddress !== userAddress!.toLowerCase()

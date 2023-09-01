@@ -7,11 +7,9 @@ import {
   Image,
   Modal,
   rem,
-  Space,
   Stack,
   Text,
   TextInput,
-  Tooltip,
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -96,7 +94,7 @@ export function NFTCard({
   const [loading, setLoading] = useState(false);
   const [buying, setBuying] = useState(false);
   const theme = useMantineTheme();
-  const { web3Provider } = useContext(Web3Context);
+  const { web3Provider, userAddress } = useContext(Web3Context);
 
   const buyListing = async () => {
     if (!web3Provider) {
@@ -215,6 +213,7 @@ export function NFTCard({
           {buy ? (
             <Button
               radius="xl"
+              disabled={!userAddress}
               onClick={buyListing}
               loading={buying}
               variant="gradient"

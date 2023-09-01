@@ -58,7 +58,7 @@ export function CollectionButton({
             {name}
           </Text>
 
-          <Text color="dimmed" size="xs">
+          <Text color="blue" size="xs">
             {description}
           </Text>
 
