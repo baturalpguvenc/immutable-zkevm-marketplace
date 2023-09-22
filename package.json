@@ -11,7 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
-    "@imtbl/sdk": "0.15.0-alpha",
+    "@imtbl/sdk": "0.19.0-alpha",
     "@mantine/core": "^6.0.14",
     "@mantine/hooks": "^6.0.14",
     "@mantine/next": "^6.0.14",

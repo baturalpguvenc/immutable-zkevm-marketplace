@@ -108,10 +108,12 @@ export function NFTCard({
       const address = await signer.getAddress();
 
       console.log("Buying", id, address, signer);
-      const fulfillResponse = await orderbookSDK.fulfillOrder(id!, address, {
-        recipient: MARKETPLACE_FEE_RECIPIENT,
-        amount: ((3 / 100) * Number(listing.amount)).toString(),
-      });
+      const fulfillResponse = await orderbookSDK.fulfillOrder(id!, address, [
+        {
+          recipient: MARKETPLACE_FEE_RECIPIENT,
+          amount: ((3 / 100) * Number(listing.amount)).toString(),
+        },
+      ]);
       const { actions } = fulfillResponse;
       const result = await actionAll(actions, signer, web3Provider);
       notifications.show({
