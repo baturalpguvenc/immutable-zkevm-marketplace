@@ -146,6 +146,7 @@ export function HeaderSearch({ links }: HeaderSearchProps) {
           >
             {web3Provider === undefined ? "Connect" : "My Wallet"}
           </Button>
+          {web3Provider ? <Button onClick={() => setWeb3Provider(undefined)} variant="light">Disconnect</Button> : <></>}
         </Group>
       </Container>
       <Group position="right">

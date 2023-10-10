@@ -30,7 +30,7 @@ interface CollectionButtonProps extends UnstyledButtonProps {
   name: string;
   contractAddress: string;
   updatedAt: string;
-  icon?: React.ReactNode;
+  icon?: JSX.Element;
   description: string;
 }
 

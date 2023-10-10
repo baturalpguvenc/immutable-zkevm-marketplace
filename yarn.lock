@@ -927,7 +927,7 @@
     ethers "^5.6.9"
     hash.js "^1.1.7"
 
-"@imtbl/sdk@0.24.1-alpha":
+"@imtbl/sdk@0.24.1-alpha.1":
   version "0.24.1-alpha.1"
   resolved "https://registry.yarnpkg.com/@imtbl/sdk/-/sdk-0.24.1-alpha.1.tgz#c708ef4c078d9e1f7b14db62fe0e0843e6377ff8"
   integrity sha512-CAoMcKSm7NZjBUD/Z5KMladD8HbLFFZBAcKlA5hT2OCS9/lgW43SeutoeqTTz47NBUbMjclCGt1kCA7ukLY7Cw==

@@ -167,6 +167,7 @@ export function NFTCard({
         orderComponents: orderComponents,
         orderHash: orderHash,
         orderSignature: signature,
+        makerFees: [],
       });
       if (orderId) {
         setLoading(false);
