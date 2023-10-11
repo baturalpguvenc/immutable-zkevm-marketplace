@@ -5,8 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:dev": "env-cmd -f .env.dev next build",
+    "build:sandbox": "env-cmd -f .env.sandbox next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "echo \"All Good\"",
+    "upload:dev": "aws s3 sync ./out s3://imx-example-marketplace-frontend/dev",
+    "upload:sandbox": "aws s3 sync ./out s3://imx-example-marketplace-frontend/sandbox"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -18,17 +23,24 @@
     "@mantine/notifications": "^6.0.15",
     "@mantine/spotlight": "^6.0.15",
     "@tabler/icons-react": "^2.23.0",
-    "@types/node": "20.3.1",
-    "@types/react": "18.2.13",
-    "@types/react-dom": "18.2.6",
     "axios": "^1.4.0",
     "cookies-next": "^2.1.2",
     "next": "13.4.7",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "typescript": "5.1.3"
+    "react-dom": "18.2.0"
   },
   "browser": {
     "fs": false
+  },
+  "devDependencies": {
+    "@types/node": "20.3.1",
+    "@types/react": "18.2.13",
+    "@types/react-dom": "18.2.6",
+    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "@typescript-eslint/parser": "^6.7.5",
+    "env-cmd": "^10.1.0",
+    "eslint": "^8.51.0",
+    "eslint-config-next": "13.5.4",
+    "typescript": "^5.2.2"
   }
 }

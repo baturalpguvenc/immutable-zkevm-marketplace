@@ -1,0 +1,107 @@
+---
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  DEV_DISTRIBUTION_ID: XXX
+  SANDBOX_DISTRIBUTION_ID: YYY
+
+# this is used by github OIDC to assume the admin role later on
+permissions: # see this: https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+  id-token: write # This is required for requesting the JWT
+  contents: write # This is required for actions/checkout
+  actions: read # This is required for nrwl/nx-set-shas@v3
+
+jobs:
+  lint-test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Dependencies
+        uses: ./.github/actions/cache
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Test
+        run: yarn test
+
+  deploy-dev:
+    name: Deploy Dev
+    if: false
+    needs: lint-test
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: us-east-2
+
+    steps:
+      - name: configure aws credentials (non-prod)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::783421985614:role/immutable-nonprod-admin
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set SHAs
+        uses: nrwl/nx-set-shas@v4
+
+      - name: Install Dependencies
+        uses: ./.github/actions/cache
+
+      - name: Build & Upload affected to S3 - dev
+        run: |
+          yarn build:dev
+          yarn upload:dev
+
+      - name: Clear the cloudfront cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ env.DEV_DISTRIBUTION_ID }} --paths "/*"
+
+  deploy-sandbox:
+    name: Deploy Sandbox
+    if: false
+    needs: lint-test
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: us-east-2
+
+    steps:
+      - name: configure aws credentials (non-prod)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::783421985614:role/immutable-nonprod-admin
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set SHAs
+        uses: nrwl/nx-set-shas@v4
+
+      - name: Install Dependencies
+        uses: ./.github/actions/cache
+
+      - name: Build & Upload affected to S3 - sandbox
+        run: |
+          yarn run build:sandbox
+          yarn run upload:sandbox
+
+      - name: Clear the cloudfront cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ env.SANDBOX_DISTRIBUTION_ID }} --paths "/*"
