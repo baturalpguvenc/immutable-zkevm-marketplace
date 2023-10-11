@@ -9,16 +9,19 @@ runs:
       with:
         node-version: 18
 
-    - name: Cache node modules
-      id: cache-nodemodules
-      uses: actions/cache@v3
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+    - uses: actions/cache@v3
+      id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
       with:
-        # cache whole node_modules instead of ./npm, means `npm ci` will be skipped if cache hit, https://www.voorhoede.nl/en/blog/super-fast-npm-install-on-github-actions/
-        path: |
-          node_modules
-        key: ${{ runner.os }}-nodemodules-${{ hashFiles('package-lock.json') }}
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
 
     - name: Install Dependencies
-      if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+      if: steps.yarn-cache.outputs.cache-hit != 'true'
       shell: bash
-      run: npm ci
+      run: yarn install --frozen-lockfile
