@@ -77,8 +77,10 @@ export default function NFTPage() {
       }
     };
 
-    fetchData();
-  }, [web3Provider, userAddress]);
+    if (userAddress) {
+      fetchData();
+    }
+  }, [userAddress]);
 
   if (listings === undefined || collection === undefined) {
     return (

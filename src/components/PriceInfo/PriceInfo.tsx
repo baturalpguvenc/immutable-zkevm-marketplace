@@ -12,7 +12,7 @@ export function PriceInfo({ fees, listing }: PriceInfoProps) {
   const royalty = fees.find((fee) => fee.type === orderbook.FeeType.ROYALTY);
   const protocol = fees.find((fee) => fee.type === orderbook.FeeType.PROTOCOL);
   const taker: orderbook.Fee = {
-    type: orderbook.FeeType.MAKER_MARKETPLACE,
+    type: orderbook.FeeType.TAKER_ECOSYSTEM,
     amount: ((3 / 100) * Number(listing.amount)).toString(),
     recipient: MARKETPLACE_FEE_RECIPIENT,
   };

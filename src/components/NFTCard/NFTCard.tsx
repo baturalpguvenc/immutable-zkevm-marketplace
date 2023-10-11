@@ -21,6 +21,7 @@ import { notifications } from "@mantine/notifications";
 import { actionAll, MARKETPLACE_FEE_RECIPIENT, WEI } from "@/sdk/orderbook";
 import { PriceInfo } from "../PriceInfo/PriceInfo";
 import router from "next/router";
+import { CartContext } from "@/contexts/CartContext";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -87,6 +88,7 @@ export function NFTCard({
   id,
   fees = [],
 }: NFTCardProps) {
+  const { orders, setOrders } = useContext(CartContext)
   const { classes } = useStyles();
   const [listing] = buy || [];
   const [opened, { toggle, close }] = useDisclosure(false);
@@ -138,6 +140,39 @@ export function NFTCard({
     }
   };
 
+  const addListingToCart = async () => {
+    console.log(`Adding listing ${id} to cart`)
+
+    if (setOrders) {
+      if (orders.find(o => o.orderId === id)) {
+        notifications.show({
+          title: "Order already in cart!",
+          color: "red",
+          icon: <IconCheck />,
+          message: `Order is already in the shopping cart! 🤥`,
+        }); 
+
+        return;
+      }
+      setOrders(o => [...o, {
+        // orderId must be defined if this function can be called
+        orderId: id!,
+        name: name,
+        description: description,
+        image: image,
+        fees: fees,
+        buy: buy!,
+      }])
+
+      notifications.show({
+        title: "Order Added to Cart",
+        color: "green",
+        icon: <IconCheck />,
+        message: `Your order is added to cart, you are awesome! orderId: ${id} 🤥`,
+      });
+    }
+  }
+
   const createListing = async () => {
     if (!web3Provider) return;
     try {
@@ -167,6 +202,7 @@ export function NFTCard({
         orderComponents: orderComponents,
         orderHash: orderHash,
         orderSignature: signature,
+        makerFees: [],
       });
       if (orderId) {
         setLoading(false);
@@ -213,6 +249,7 @@ export function NFTCard({
           </Group>
           {listing && <PriceInfo fees={fees} listing={listing} />}
           {buy ? (
+            <>
             <Button
               radius="xl"
               disabled={!userAddress}
@@ -223,6 +260,17 @@ export function NFTCard({
             >
               Buy now
             </Button>
+            <Button
+              radius="xl"
+              disabled={!userAddress}
+              onClick={addListingToCart}
+              loading={buying}
+              variant="gradient"
+              fullWidth
+            >
+              Add to cart
+            </Button>
+            </>
           ) : (
             <>
               <Button variant="gradient" radius="xl" onClick={toggle} fullWidth>
