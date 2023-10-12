@@ -37,26 +37,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export default function Cart() {
-  const { web3Provider, userAddress } = useContext(Web3Context);
   const { orders, setOrders } = useContext(CartContext);
-
-  const [nfts, setNfts] = useState([]);
-
-  useEffect(() => {
-    // if (!web3Provider) return;
-    // const fetchData = async () => {
-    //   const response = await blockChainSDK.listNFTsByAccountAddress({
-    //     chainName: CHAIN_NAME,
-    //     accountAddress: userAddress!,
-    //   });
-    //   setNfts(response.result as any);
-    // };
-    // fetchData();
-  }, [web3Provider, userAddress]);
-
-  useEffect(() => {
-    console.log(orders)
-  }, [orders])
 
   return (
       <Container size="sm">
