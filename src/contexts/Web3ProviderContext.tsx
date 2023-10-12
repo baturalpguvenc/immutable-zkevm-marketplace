@@ -1,10 +1,14 @@
 import React, { createContext, useEffect, useState } from "react";
-import { Web3Provider } from "@ethersproject/providers";
+import { Web3Provider, ExternalProvider, JsonRpcFetchFunc } from "@ethersproject/providers";
 import { providers } from "ethers";
+
+interface Ethereum extends ExternalProvider, JsonRpcFetchFunc {
+  on: (eventName: "accountsChanged", handler: (accounts: string[]) => void) => void;
+}
 
 declare global {
   interface Window {
-    ethereum: providers.ExternalProvider | providers.JsonRpcFetchFunc;
+    ethereum: Ethereum;
   }
 }
 
@@ -51,7 +55,7 @@ export function Web3ProviderContextProvider({ children }: any) {
 
   const checkIfAccountChanged = async () => {
     try {
-      window.ethereum.on("accountsChanged", (accounts: string[]) => {
+      window.ethereum.on("accountsChanged", (accounts) => {
         console.log("accounts changed", accounts[0]);
         setUserAddress(accounts[0]);
       });
