@@ -18,7 +18,7 @@ interface CheckoutProps {
 }
 
 export function Checkout({ orders }: CheckoutProps) {
-  const { web3Provider, userAddress } = useContext(Web3Context);
+  const { web3Provider } = useContext(Web3Context);
   const [buying, setBuying] = useState(false);
 
   const total =
@@ -64,7 +64,7 @@ export function Checkout({ orders }: CheckoutProps) {
         title: "NFT Purchased!",
         color: "green",
         icon: <IconCheck />,
-        message: `NFT Purchased, you are awesome! transactionHash: ${result} 🤥`,
+        message: `NFT Purchased, you are awesome! transactionHash: ${result}`,
         onClose: () => {
           router.reload();
         },

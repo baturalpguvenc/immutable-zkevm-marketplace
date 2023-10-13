@@ -1,9 +1,17 @@
 import React, { createContext, useEffect, useState } from "react";
-import { Web3Provider, ExternalProvider, JsonRpcFetchFunc } from "@ethersproject/providers";
+import {
+  Web3Provider,
+  ExternalProvider,
+  JsonRpcFetchFunc,
+} from "@ethersproject/providers";
 import { providers } from "ethers";
+import { passportSDK } from "@/sdk/immutable";
 
 interface Ethereum extends ExternalProvider, JsonRpcFetchFunc {
-  on: (eventName: "accountsChanged", handler: (accounts: string[]) => void) => void;
+  on: (
+    eventName: "accountsChanged",
+    handler: (accounts: string[]) => void
+  ) => void;
 }
 
 declare global {
@@ -34,7 +42,24 @@ export function Web3ProviderContextProvider({ children }: any) {
 
   // Load web3Provider from an already connected window.etherum
   useEffect(() => {
-    if (window.ethereum) {
+    const provider = new providers.Web3Provider(passportSDK.connectEvm());
+    if (provider) {
+      const tryGetPassportProvider = async () => {
+        try {
+          const [connectedWallet]: (string | undefined)[] = await provider.send('eth_requestAccounts', []);
+          if (!connectedWallet) {
+            return;
+          }
+          setWeb3Provider(provider);
+          setUserAddress(connectedWallet);
+        } catch (e) { 
+          console.log(e)
+          // do nothing
+        }
+      };
+      tryGetPassportProvider();
+    }
+    if (window.ethereum && !provider) {
       const provider = new providers.Web3Provider(window.ethereum);
       const fetchProvider = async () => {
         if (provider) {

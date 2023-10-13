@@ -11,12 +11,15 @@ export default function Assets() {
   const [nfts, setNfts] = useState([]);
 
   useEffect(() => {
-    if (!web3Provider) return;
+    console.log(web3Provider)
+    console.log(userAddress)
+    if (!web3Provider || !userAddress) return;
     const fetchData = async () => {
       const response = await blockChainSDK.listNFTsByAccountAddress({
         chainName: CHAIN_NAME,
         accountAddress: userAddress!,
       });
+      console.log(response)
       setNfts(response.result as any);
     };
     fetchData();
