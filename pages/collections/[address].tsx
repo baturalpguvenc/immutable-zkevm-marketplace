@@ -56,16 +56,17 @@ export default function NFTPage() {
 
         // Listings
         const lres = await orderbookSDK.listListings({
-          status: orderbook.OrderStatus.ACTIVE,
+          status: orderbook.OrderStatusName.ACTIVE,
           sellItemContractAddress: String(address),
         });
 
+        // TODO: display listings as 'my listings'
         let filteredListings: orderbook.Order[] = lres.result;
-        if (userAddress) {
-          filteredListings = lres.result.filter(
-            (l) => l.accountAddress !== userAddress!.toLowerCase()
-          );
-        }
+        // if (userAddress) {
+        //   filteredListings = lres.result.filter(
+        //     (l) => l.accountAddress !== userAddress!.toLowerCase()
+        //   );
+        // }
 
         setData({
           listings: filteredListings,
@@ -77,8 +78,10 @@ export default function NFTPage() {
       }
     };
 
-    fetchData();
-  }, [web3Provider, userAddress]);
+    if (userAddress) {
+      fetchData();
+    }
+  }, [userAddress]);
 
   if (listings === undefined || collection === undefined) {
     return (

@@ -14,12 +14,14 @@ import { Notifications } from "@mantine/notifications";
 import { Web3ProviderContextProvider } from "@/contexts/Web3ProviderContext";
 import { WidgetProvider } from "@/hooks/orchestration";
 import { HeaderSearch } from "@/components/HeaderSearch/HeaderSearch";
+import { CartContext, Orders } from "@/contexts/CartContext";
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
   const [colorScheme, setColorScheme] = useState<ColorScheme>(
     props.colorScheme
   );
+  const [orders, setOrders] = useState<Orders>([]);
 
   const toggleColorScheme = (value?: ColorScheme) => {
     const nextColorScheme =
@@ -41,37 +43,43 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
         <link rel="shortcut icon" href="/favicon.svg" />
       </Head>
 
-      <Web3ProviderContextProvider>
-        <ColorSchemeProvider
-          colorScheme={colorScheme}
-          toggleColorScheme={toggleColorScheme}
-        >
-          <MantineProvider
-            theme={{ colorScheme }}
-            withGlobalStyles
-            withNormalizeCSS
+      <CartContext.Provider value={{ orders, setOrders }}>
+        <Web3ProviderContextProvider>
+          <ColorSchemeProvider
+            colorScheme={colorScheme}
+            toggleColorScheme={toggleColorScheme}
           >
-            <WidgetProvider>
-              <AppShell
-                header={
-                  <HeaderSearch
-                    links={[
-                      { label: "Home", link: "/" },
-                      {
-                        label: "Assets",
-                        link: "/assets",
-                      },
-                    ]}
-                  />
-                }
-              >
-                <Component {...pageProps} />
-              </AppShell>
-            </WidgetProvider>
-            <Notifications />
-          </MantineProvider>
-        </ColorSchemeProvider>
-      </Web3ProviderContextProvider>
+            <MantineProvider
+              theme={{ colorScheme }}
+              withGlobalStyles
+              withNormalizeCSS
+            >
+              <WidgetProvider>
+                <AppShell
+                  header={
+                    <HeaderSearch
+                      links={[
+                        { label: "Home", link: "/" },
+                        {
+                          label: "Assets",
+                          link: "/assets",
+                        },
+                        {
+                          label: "Cart",
+                          link: "/cart",
+                        },
+                      ]}
+                    />
+                  }
+                >
+                  <Component {...pageProps} />
+                </AppShell>
+              </WidgetProvider>
+              <Notifications />
+            </MantineProvider>
+          </ColorSchemeProvider>
+        </Web3ProviderContextProvider>
+      </CartContext.Provider>
     </>
   );
 }
