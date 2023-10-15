@@ -11,7 +11,7 @@ export default function Assets() {
   const [nfts, setNfts] = useState([]);
 
   useEffect(() => {
-    if (!web3Provider) return;
+    if (!web3Provider || !userAddress) return;
     const fetchData = async () => {
       const response = await blockChainSDK.listNFTsByAccountAddress({
         chainName: CHAIN_NAME,

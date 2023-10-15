@@ -1,4 +1,4 @@
-import { blockchainData, config, orderbook } from "@imtbl/sdk";
+import { blockchainData, config, orderbook, passport } from "@imtbl/sdk";
 import { providers } from "ethers";
 
 export const ENVIRONMENT_SDK = config.Environment.SANDBOX;
@@ -18,4 +18,17 @@ export const orderbookSDK = new orderbook.Orderbook({
       "https://rpc.testnet.immutable.com"
     ),
   },
+});
+
+export const passportSDK = new passport.Passport({
+  baseConfig: new config.ImmutableConfiguration({
+    environment: config.Environment.SANDBOX,
+  }),
+  // non production client id
+  clientId: '4jz9egnVkDgdrYQZZH8yFuvbNY1GyqVb',
+  // default next dev hosting
+  redirectUri: 'http://localhost:3000',
+  logoutRedirectUri: 'http://localhost:3000',
+  audience: 'platform_api',
+  scope: 'openid offline_access email transact'
 });

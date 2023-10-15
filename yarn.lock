@@ -990,7 +990,7 @@
     ethers "^5.6.9"
     hash.js "^1.1.7"
 
-"@imtbl/sdk@0.26.0-alpha":
+"@imtbl/sdk@0.26.0":
   version "0.26.0"
   resolved "https://registry.yarnpkg.com/@imtbl/sdk/-/sdk-0.26.0.tgz#58da6cb56e63ef8d169cad521b8176200592f942"
   integrity sha512-LP86A8Wasxs5T7CWBWjzAv3LLzh8ha7mFxVxbrKGHCPxm/CNFekzc3AVkfE1//i1vlWSzeE7U6Ehh+esKOEs3w==

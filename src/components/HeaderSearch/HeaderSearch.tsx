@@ -118,7 +118,6 @@ export function HeaderSearch({ links }: HeaderSearchProps) {
       })}
       onClick={() => {
         setActive(link.link);
-        close();
       }}
     >
       {link.label}
