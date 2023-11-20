@@ -46,8 +46,8 @@ export default function Cart() {
         </Title>
         <Group>
           {orders.length === 0 && <Text size="h2">Nothing here yet, add some NFTs to the cart!</Text>}
-          {orders.map((o) => (
-            <CartEntry {...o} setOrders={setOrders} />
+          {orders.map((o, i) => (
+            <CartEntry {...o} key={`order-${i}`} setOrders={setOrders} />
           ))}
         </Group>
         <Checkout orders={orders} />

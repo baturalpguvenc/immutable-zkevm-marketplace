@@ -58,6 +58,16 @@ export function Checkout({ orders }: CheckoutProps) {
         }
       }), address);
 
+      if (!fulfillResponse.sufficientBalance) {
+        notifications.show({
+          title: "NFT Purchased Error!",
+          color: "red",
+          icon: <IconExclamationCircle />,
+          message: `Insufficient balance to fulfill order`,
+        });
+        return;
+      }
+
       const { actions } = fulfillResponse;
       const result = await actionAll(actions, signer, web3Provider);
       notifications.show({

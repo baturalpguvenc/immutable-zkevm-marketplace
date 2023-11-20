@@ -1,9 +1,8 @@
 import { Web3Provider } from "@ethersproject/providers";
-import { checkoutWidgets, config } from "@imtbl/sdk";
+import { checkoutSdk, config } from "@imtbl/sdk";
 import { Group } from "@mantine/core";
 import { ShowWidget } from "@/hooks/orchestration";
-import React, { useContext, useEffect } from "react";
-import { Web3Context } from "@/contexts/Web3ProviderContext";
+import React, { useEffect, useMemo } from "react";
 import { passportSDK  } from "@/sdk/immutable";
 import { useSearchParams } from 'next/navigation';
 
@@ -15,25 +14,19 @@ export interface ImtblWidgetsProps {
   showBridge: ShowWidget;
 }
 
-const {
-  BridgeReact,
-  CheckoutWidgets,
-  ConnectReact,
-  SwapReact,
-  WalletReact,
-  WidgetTheme,
-} = checkoutWidgets;
-
-const { Environment } = config;
-
 export const ImmutableWidget = ({
   showConnect,
-  showWallet,
-  showSwap,
-  showBridge,
 }: ImtblWidgetsProps) => {
-  const { web3Provider } = useContext(Web3Context);
   const searchparams = useSearchParams();
+  const checkoutConfig = {
+    environment: config.Environment.SANDBOX,
+  };
+  const widgetConfig = {
+    theme: checkoutSdk.WidgetTheme.DARK
+  };
+  const checkout = useMemo(()=> new checkoutSdk.Checkout({
+    baseConfig: checkoutConfig,
+  }), []);
 
   if (searchparams.get('code')) {
     passportSDK.loginCallback().catch((e) => {
@@ -42,31 +35,22 @@ export const ImmutableWidget = ({
     });
   }
 
-  // Set widget's config
+  // Load widgets bundle (this needs to be done only once)
+  // Create + mount connect widget
   useEffect(() => {
-    CheckoutWidgets({
-      environment: Environment.SANDBOX,
-      theme: WidgetTheme.DARK,
-      isBridgeEnabled: true,
-      isSwapEnabled: true,
-    });
-  }, []);
+    (async () => {
+      const factory = await checkout.widgets({ config: widgetConfig });
+      const connect = factory.create(checkoutSdk.WidgetType.CONNECT);
+      connect.mount('connect')
+      connect.addListener(checkoutSdk.ConnectEventType.SUCCESS, (data: any) => {
+        console.log(data);
+      })
+    })();
+  }, [checkout])
 
   return (
     <Group>
-      {showConnect.show && <ConnectReact passport={passportSDK} />}
-      {showWallet.show && (
-        <WalletReact provider={web3Provider} passport={passportSDK} />
-      )}
-      {showSwap.show && (
-        <SwapReact
-          provider={web3Provider}
-          fromContractAddress={showSwap.data?.fromTokenAddress || ""}
-          toContractAddress={showSwap.data?.toTokenAddress || ""}
-          amount={showSwap.data?.amount || ""}
-        />
-      )}
-      {showBridge.show && <BridgeReact provider={web3Provider} />}
+      {showConnect.show && <div id="connect" />}
     </Group>
   );
 };

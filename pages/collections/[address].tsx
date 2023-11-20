@@ -61,7 +61,7 @@ export default function NFTPage() {
         });
 
         // TODO: display listings as 'my listings'
-        let filteredListings: orderbook.Order[] = lres.result;
+        const filteredListings: orderbook.Order[] = lres.result;
         // if (userAddress) {
         //   filteredListings = lres.result.filter(
         //     (l) => l.accountAddress !== userAddress!.toLowerCase()

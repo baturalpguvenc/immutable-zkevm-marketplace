@@ -1,11 +1,8 @@
 import { Web3Provider } from "@ethersproject/providers";
-import { checkoutWidgets } from "@imtbl/sdk";
+import { checkoutSdk } from '@imtbl/sdk';
 import { useContext, useEffect } from "react";
 import { handleOrchestrationEvent } from "./orchestration";
 import { hideAllWidgets, WidgetContext } from "./orchestration";
-
-const { IMTBLWidgetEvents, OrchestrationEventType, ConnectEventType } =
-  checkoutWidgets;
 
 export function useConnectWidget(setWeb3Provider: (val: Web3Provider) => void) {
   const { showWidgets, setShowWidgets } = useContext(WidgetContext);
@@ -14,23 +11,23 @@ export function useConnectWidget(setWeb3Provider: (val: Web3Provider) => void) {
   useEffect(() => {
     const handleConnectEvent = ((event: CustomEvent) => {
       switch (event.detail.type) {
-        case ConnectEventType.SUCCESS: {
+        case checkoutSdk.ConnectEventType.SUCCESS: {
           const eventData = event.detail.data;
           setWeb3Provider(eventData.provider);
           break;
         }
-        case ConnectEventType.FAILURE: {
+        case checkoutSdk.ConnectEventType.FAILURE: {
           // const eventData = event.detail.data as ConnectionFailed;
           break;
         }
-        case ConnectEventType.CLOSE_WIDGET: {
+        case checkoutSdk.ConnectEventType.CLOSE_WIDGET: {
           setShowWidgets(hideAllWidgets);
           break;
         }
-        case OrchestrationEventType.REQUEST_CONNECT:
-        case OrchestrationEventType.REQUEST_WALLET:
-        case OrchestrationEventType.REQUEST_SWAP:
-        case OrchestrationEventType.REQUEST_BRIDGE: {
+        case checkoutSdk.OrchestrationEventType.REQUEST_CONNECT:
+        case checkoutSdk.OrchestrationEventType.REQUEST_WALLET:
+        case checkoutSdk.OrchestrationEventType.REQUEST_SWAP:
+        case checkoutSdk.OrchestrationEventType.REQUEST_BRIDGE: {
           handleOrchestrationEvent(event, setShowWidgets);
           break;
         }
@@ -42,14 +39,14 @@ export function useConnectWidget(setWeb3Provider: (val: Web3Provider) => void) {
 
     if (showConnect || showWallet || showBridge || showSwap) {
       window.addEventListener(
-        IMTBLWidgetEvents.IMTBL_CONNECT_WIDGET_EVENT,
+        checkoutSdk.IMTBLWidgetEvents.IMTBL_CONNECT_WIDGET_EVENT,
         handleConnectEvent
       );
     }
 
     return () => {
       window.removeEventListener(
-        IMTBLWidgetEvents.IMTBL_CONNECT_WIDGET_EVENT,
+        checkoutSdk.IMTBLWidgetEvents.IMTBL_CONNECT_WIDGET_EVENT,
         handleConnectEvent
       );
     };

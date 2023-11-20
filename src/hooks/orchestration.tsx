@@ -1,4 +1,4 @@
-import { checkoutWidgets } from "@imtbl/sdk";
+import { checkoutSdk } from '@imtbl/sdk';
 import React, {
   createContext,
   Dispatch,
@@ -25,38 +25,22 @@ export const hideAllWidgets: WidgetState = {
   showBridge: { show: false, data: {} },
 };
 
-const { OrchestrationEventType } = checkoutWidgets;
-
 export function handleOrchestrationEvent(
   event: CustomEvent,
   setShowWidgets: Dispatch<SetStateAction<WidgetState>>
 ) {
   switch (event.detail.type) {
-    case OrchestrationEventType.REQUEST_CONNECT: {
+    case checkoutSdk.OrchestrationEventType.REQUEST_CONNECT: {
       setShowWidgets({
         ...hideAllWidgets,
         showConnect: { show: true, data: event.detail.data },
       });
       return;
     }
-    case OrchestrationEventType.REQUEST_WALLET: {
+    case checkoutSdk.OrchestrationEventType.REQUEST_WALLET: {
       setShowWidgets({
         ...hideAllWidgets,
         showWallet: { show: true, data: event.detail.data },
-      });
-      return;
-    }
-    case OrchestrationEventType.REQUEST_SWAP: {
-      setShowWidgets({
-        ...hideAllWidgets,
-        showSwap: { show: true, data: event.detail.data },
-      });
-      return;
-    }
-    case OrchestrationEventType.REQUEST_BRIDGE: {
-      setShowWidgets({
-        ...hideAllWidgets,
-        showBridge: { show: true, data: event.detail.data },
       });
       return;
     }
